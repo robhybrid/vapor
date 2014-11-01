@@ -1,0 +1,32 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  height: 100%;
+  width: 100%;
+}
+
+div#main {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+video {
+  width: 100%;
+//  object-fit: cover;
+//  overflow: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  //transition: opacity 0.3s;
+  opacity: 1;
+}
+
+video.off {
+  opacity: 0;
+}
+
+// hide the mouse
+* {cursor: none;}

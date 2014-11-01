@@ -1,0 +1,11 @@
+{
+  "name": "vjapp",
+  "version": "0.0.0",
+  "dependencies": {
+    "json3": "~3.3.1",
+    "es5-shim": "~3.0.1",
+    "jquery": "~1.11.0",
+    "lodash": "~2.4.1",
+    "jwerty": "~0.3.2"
+  }
+}

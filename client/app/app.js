@@ -2,18 +2,22 @@ $(function() {
 
 
   // load videos
-  var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm,./';
+  var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm,';
   var keyPointer = 0;
   $.ajax({
     url: 'assets/video'
   }).done(function(data){
     $('#files li', data).each(function(i) {
-      console.log('v', i, $(this));
+
       if ($('a', this).attr('title')[0] === '.') {
         // skip hidden files
         return;
       }
       if ($('.size', this).text()) { //only files have sizes
+        if ( ! videoKeyChars[keyPointer+1]) {
+          return;
+        }
+
         // todo: use a template.
         // insert video in dom.
         $el.append(
@@ -39,6 +43,7 @@ $(function() {
   var keysDown = {};
   var $el = $('#main');
   function mapVideo(key, video){
+    console.log(key);
     var $video = $(video);
     jwerty.key(key, function(){
       if (keysDown[key]) return;

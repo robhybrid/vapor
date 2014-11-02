@@ -20,3 +20,7 @@ run `grunt serve`
 
 mash some keys (starting with 'Q').
 
+<<<<<<< HEAD
+=======
+Yo!!
+>>>>>>> 36669e3a63f508a4b381d1520f0540a778faecc3

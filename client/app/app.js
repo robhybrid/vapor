@@ -3,6 +3,7 @@ $(function() {
 
   // load videos
   var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm,';
+  var $videos = $('video');
   var keyPointer = 0;
   $.ajax({
     url: 'assets/video'
@@ -23,8 +24,10 @@ $(function() {
         $el.append(
           $('<video>', {
             id: 'v' + i,
-            src: $('a', this).attr('href'),
-            loop: 'loop'
+            src:  $('a', this).attr('href'), //'file:///Users/robertwilliams/Sites/vjapp/client' +
+            loop: 'loop',
+            //preload: 'auto',
+            'class': 'off'
           })
         );
         // map keys to video
@@ -35,8 +38,7 @@ $(function() {
     });
 
     // set the stage
-    var $videos = $('video');
-    $videos.addClass('off');
+    $videos = $('video');
   });
 
 
@@ -60,7 +62,9 @@ $(function() {
   }
 
   function play($video) {
-    $el.append($video);
+    if ( ! $video.is(':last-child') ) {
+      $el.append($video);
+    }
     $video[0].play();
     $video.removeClass('off');
     var $parent = $video.parent();

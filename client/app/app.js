@@ -8,37 +8,58 @@ $(function() {
   $.ajax({
     url: 'assets/video'
   }).done(function(data){
-    $('#files li', data).each(function(i) {
-
-      if ($('a', this).attr('title')[0] === '.') {
-        // skip hidden files
+      var c = 0;
+      var $files = $('#files li', data);
+    loadVideo($files.first());
+    function loadVideo($file) {
+      console.log('laodVideo', $file);
+      if ($file.length == 0) {
         return;
       }
-      if ($('.size', this).text()) { //only files have sizes
+      if ($('a', $file).attr('title')[0] === '.') {
+        // skip hidden files
+        return loadVideo($file.next());
+      }
+      if ($('.size', $file).text()) { //only files have sizes
         if ( ! videoKeyChars[keyPointer+1]) {
-          return;
+          return loadVideo($file.next());
         }
+
+        var $video = $('<video>', {
+          id: 'v' + keyPointer,
+          src:  $('a', $file).attr('href'), //'file:///Users/robertwilliams/Sites/vjapp/client' +
+          loop: 'loop',
+          preload: 'auto',
+          'class': 'off'
+        });
+
+        $video.on('error', function(e){
+          console.log('video error', e);
+        });
+
+        $video.on('canplaythrough', function(e){
+          console.log('canplaythrough !', e.currentTarget.src);
+          console.log(++c);
+          loadVideo($file.next());
+        });
 
         // todo: use a template.
         // insert video in dom.
         $el.append(
-          $('<video>', {
-            id: 'v' + i,
-            src:  $('a', this).attr('href'), //'file:///Users/robertwilliams/Sites/vjapp/client' +
-            loop: 'loop',
-            //preload: 'auto',
-            'class': 'off'
-          })
+          $video
         );
         // map keys to video
-        mapVideo(videoKeyChars[keyPointer++], '#v' + i);
+        mapVideo(videoKeyChars[keyPointer++], $video);
+        $videos = $('video');
+
       } else {
         // recursively descend.
+        return loadVideo($file.next());
       }
-    });
+    };
 
     // set the stage
-    $videos = $('video');
+
   });
 
 

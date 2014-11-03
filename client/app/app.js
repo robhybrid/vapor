@@ -2,7 +2,7 @@ $(function() {
 
 
   // load videos
-  var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm,';
+  var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm,./';
   var $videos = $('video');
   var keyPointer = 0;
   $.ajax({
@@ -12,7 +12,6 @@ $(function() {
       var $files = $('#files li', data);
     loadVideo($files.first());
     function loadVideo($file) {
-      console.log('laodVideo', $file);
       if ($file.length == 0) {
         return;
       }
@@ -34,10 +33,10 @@ $(function() {
         });
 
         $video.on('error', function(e){
-          console.log('video error', e);
+          console.log('video error', arguments);
         });
 
-        $video.on('canplaythrough', function(e){
+        $video.one('canplaythrough', function(e){
           console.log('canplaythrough !', e.currentTarget.src);
           console.log(++c);
           loadVideo($file.next());
@@ -66,7 +65,6 @@ $(function() {
   var keysDown = {};
   var $el = $('#main');
   function mapVideo(key, video){
-    console.log(key);
     var $video = $(video);
     jwerty.key(key, function(){
       if (keysDown[key]) return;

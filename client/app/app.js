@@ -92,6 +92,7 @@ $(function() {
     var $container = $video.parent()
     if ( ! $container.is(':last-child') ) {
       $el.append($container);
+      $container.css('opacity');
     }
     $video[0].play();
     $container.removeClass('off');

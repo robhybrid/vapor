@@ -27,6 +27,7 @@
         transition: opacity 300ms;
       }
     </style>
+
   </head>
   <body>
 
@@ -35,9 +36,25 @@
     </div>
 
     <div class="adjustments hidden">
-      <label>
-        Fade Duration</label>
-        <input class="fade-duration" type="range" min="0" max="3000" value="300">
+      <label>Fade Duration</label>
+      <input class="fade-duration" type="range" min="0" max="3000" value="300">
+
+      <label>Perspective</label>
+      <input type="range" min="0" max="1000" value="500" data-css-property="perspective" data-target="video-container">
+
+      <label>X-Rotation</label>
+      <input type="range" min="0" max="360" value="0" data-transform="rotateX" data-unit="deg">
+      <label>Y-Rotation</label>
+      <input type="range" min="0" max="360" value="0" data-transform="rotateY" data-unit="deg">
+      <label>Z-Rotation</label>
+      <input type="range" min="0" max="360" value="0" data-transform="rotateZ" data-unit="deg">
+
+      <!--<label>X-Position</label>-->
+      <!--<input type="range" min="-1000" max="1000" value="0" data-translate="0" data-unit="px">-->
+      <!--<label>Y-Position</label>-->
+      <!--<input type="range" min="-1000" max="1000" value="0" data-translate="1" data-unit="px">-->
+      <!--<label>Z-Position</label>-->
+      <!--<input type="range" min="-1000" max="1000" value="0" data-translate="2" data-unit="px">-->
 
     </div>
 

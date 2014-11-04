@@ -168,4 +168,27 @@ $(function() {
   $('.fade-duration').on('input', function(e){
     $('#fade-duration').html('.video-container { transition: opacity ' + $(e.currentTarget).val() +'ms; }')
   });
+  var transform = {
+  };
+  var translate = [0,0,0];
+  $('[data-transform]').each(function(i, el){
+    var $slider = $(el),
+      method = $slider.data('transform'),
+      unit = $slider.data('unit');
+    $slider.on('input', function(e){
+      transform[method] = $(e.currentTarget).val();
+      console.log(Object.keys(transform).map(function(method){
+        return method + '(' + transform[method] + unit +')';
+      }).join(' ') );
+      $('video:last').css('transform', Object.keys(transform).map(function(method){
+        return method + '(' + transform[method] + unit +')';
+      }).join(' ') );
+    });
+  });
+  $('[data-css-property]').on('input', function(e){
+    var $slider = $(e.currentTarget),
+      data = $('[data-css-property]').data();
+    console.log($('.' + (data.target || 'video') + ':last'), data.cssProperty, $slider.val() + (data.unit || ''));
+    $('.' + (data.target || 'video') + ':last').css(data.cssProperty, $slider.val() + (data.unit || 'px'));
+  });
 });

@@ -29,10 +29,16 @@ video {
   position: absolute;
   top: 0;
 
+  -webkit-transform-origin-x: 50%;
+  -webkit-transform-origin-y: 50%;
 }
 .video-container {
   height: 100%;
   opacity: 1;
+  perspective: 500;
+  position: absolute;
+  width: 100%;
+  top: 0;
   &.off {
     opacity: 0;
   }
@@ -48,6 +54,7 @@ video {
   z-index: 1;
   cursor: default;
   height: 80%;
+  width: 100%;
   label {
     display: inline-block;
     transform: rotate(-90deg);

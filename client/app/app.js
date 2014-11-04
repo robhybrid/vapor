@@ -187,12 +187,11 @@ $(function() {
     apply3dTransform();
   });
   function apply3dTransform(){
-
     $('video:last').css('transform',
-      Object.keys(transform).map(function(method){
+      'translate3d(' + translate.join(',') + ') '
+      + Object.keys(transform).map(function(method) {
         return method + '(' + transform[method] + ')';
       }).join(' ')
-        + ' translate3d(' + translate.join(',') + ')'
     );
   }
 

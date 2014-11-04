@@ -168,23 +168,34 @@ $(function() {
   $('.fade-duration').on('input', function(e){
     $('#fade-duration').html('.video-container { transition: opacity ' + $(e.currentTarget).val() +'ms; }')
   });
-  var transform = {
-  };
+  var transform = {};
   var translate = [0,0,0];
   $('[data-transform]').each(function(i, el){
     var $slider = $(el),
       method = $slider.data('transform'),
       unit = $slider.data('unit');
-    $slider.on('input', function(e){
-      transform[method] = $(e.currentTarget).val();
-      console.log(Object.keys(transform).map(function(method){
-        return method + '(' + transform[method] + unit +')';
-      }).join(' ') );
-      $('video:last').css('transform', Object.keys(transform).map(function(method){
-        return method + '(' + transform[method] + unit +')';
-      }).join(' ') );
+    $slider.on('input', function(e) {
+      transform[method] = $(e.currentTarget).val() + unit;
+      apply3dTransform();
     });
   });
+
+  $('[data-translate]').on('input', function(e){
+    var $slider = $(e.currentTarget),
+      data = $slider.data();
+    translate[parseInt(data.translate)] = $slider.val() + data.unit;
+    apply3dTransform();
+  });
+  function apply3dTransform(){
+
+    $('video:last').css('transform',
+      Object.keys(transform).map(function(method){
+        return method + '(' + transform[method] + ')';
+      }).join(' ')
+        + ' translate3d(' + translate.join(',') + ')'
+    );
+  }
+
   $('[data-css-property]').on('input', function(e){
     var $slider = $(e.currentTarget),
       data = $('[data-css-property]').data();

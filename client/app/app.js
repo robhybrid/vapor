@@ -29,15 +29,20 @@ $(function() {
           src:  $('a', $file).attr('href'), //'file:///Users/robertwilliams/Sites/vjapp/client' +
           loop: 'loop',
           preload: 'auto',
+          autoplay: true,
           'class': 'off'
         });
 
         $video.on('error', function(e){
-          console.log('video error', arguments);
+          console.error('video error, reloading', arguments);
+          // TODO: find the exact error type.
+          var $video = $(e.currentTarget);
+          $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString())
         });
 
-        $video.one('canplaythrough', function(e){
+        $video.one('canplaythrough', function(e) {
           console.log('canplaythrough !', e.currentTarget.src);
+          $('video:last-child')[0].pause();
           console.log(++c);
           loadVideo($file.next());
         });

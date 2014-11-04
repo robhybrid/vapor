@@ -165,6 +165,6 @@ $(function() {
     $('.adjustments').toggleClass('hidden');
   });
   $('.fade-duration').on('input', function(e){
-    $('#fade-duration').html('.video-container { transition: opacity ' + $(e.currentTarget).val() * 5 +'ms; }')
+    $('#fade-duration').html('.video-container { transition: opacity ' + $(e.currentTarget).val() +'ms; }')
   });
 });

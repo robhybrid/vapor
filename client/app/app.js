@@ -26,11 +26,10 @@ $(function() {
 
         var $video = $('<video>', {
           id: 'v' + keyPointer,
-          src:  $('a', $file).attr('href'), //'file:///Users/robertwilliams/Sites/vjapp/client' +
+          src:  $('a', $file).attr('href'),
           loop: 'loop',
           preload: 'auto',
-          autoplay: true,
-          'class': 'off'
+          autoplay: true
         });
 
         $video.on('error', function(e){
@@ -42,7 +41,7 @@ $(function() {
 
         $video.one('canplaythrough', function(e) {
           console.log('canplaythrough !', e.currentTarget.src);
-          $('video:last-child')[0].pause();
+          $(e.currentTarget)[0].pause();
           console.log(++c);
           loadVideo($file.next());
         });
@@ -50,7 +49,11 @@ $(function() {
         // todo: use a template.
         // insert video in dom.
         $el.append(
-          $video
+          $('<div>', {
+              'class': 'video-container off',
+              id: 'vc' + keyPointer
+            }
+          ).append($video)
         );
         // map keys to video
         mapVideo(videoKeyChars[keyPointer++], $video);
@@ -86,20 +89,20 @@ $(function() {
   }
 
   function play($video) {
-    if ( ! $video.is(':last-child') ) {
-      $el.append($video);
+    var $container = $video.parent()
+    if ( ! $container.is(':last-child') ) {
+      $el.append($container);
     }
     $video[0].play();
-    $video.removeClass('off');
-    var $parent = $video.parent();
+    $container.removeClass('off');
     $video.css({
-      top: ($parent.height() - $video.height()) /2
+      top: ($container.height() - $video.height()) /2
     });
   }
 
   function stop($video) {
     $video[0].pause();
-    $video.addClass('off');
+    $video.parent().addClass('off');
   }
 
   // track caps lock
@@ -157,4 +160,11 @@ $(function() {
     });
   });
 
+  // sliders.
+  jwerty.key('option+s', function(){
+    $('.adjustments').toggleClass('hidden');
+  });
+  $('.fade-duration').on('input', function(e){
+    $('#fade-duration').html('.video-container { transition: opacity ' + $(e.currentTarget).val() * 5 +'ms; }')
+  });
 });

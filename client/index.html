@@ -20,11 +20,25 @@
       <!-- injector:css -->
       <!-- endinjector -->
     <!-- endbuild -->
+
+    <!-- these styles are here to be manipulated. -->
+    <style id="fade-duration">
+      .video-container {
+        transition: opacity 0.3s;
+      }
+    </style>
   </head>
   <body>
 
     <!-- application content here -->
     <div id="main">
+    </div>
+
+    <div class="adjustments">
+      <label>
+        Fade Duration</label>
+        <input class="fade-duration" type="range" min="0" max="1000" value="300">
+
     </div>
 
     <!--[if lt IE 9]>

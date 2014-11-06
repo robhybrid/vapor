@@ -21,6 +21,13 @@ function onConnect(socket) {
   socket.on('hi!', function(name, fn) {
     fn('woot!');
   });
+
+  socket.on('keydown', function(data){
+    socket.broadcast.emit('keydown', data);
+  });
+  socket.on('keyup', function(data){
+    socket.broadcast.emit('keyup', data);
+  });
 }
 
 module.exports = function (socketio) {

@@ -10,6 +10,8 @@ run `grunt serve`
 
 mash some keys (starting with 'Q').
 
-command-shift-F to enter full screen.
+Command-shift-F to enter full screen.
 
-option-s brings up fade control.
+Option-s brings up fade and Video mapping controls.
+
+use Ctrl-H to not play video on current screen.

@@ -1,6 +1,5 @@
 $(function() {
 
-
   // load videos
   var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm<.?';
   var $videos = $('video');
@@ -68,26 +67,44 @@ $(function() {
   });
 
 
-  var keysDown = {};
+
   var $el = $('#main');
+  var videoKeyMap = {};
   function mapVideo(key, video) {
     var $video = $(video);
-    jwerty.key(key, function() {
+    videoKeyMap[key] = $video;
+  }
+
+  $el.on('startVideo', function(e, key) {
+    videoKeyMap[key] && play(videoKeyMap[key]);
+  });
+  $el.on('stopVideo', function(e, key) {
+    videoKeyMap[key] && stop(videoKeyMap[key]);
+  });
+
+  // bind keyboard events
+  var keysDown = {};
+  videoKeyChars.split('').forEach(function(key){
+    jwerty.key(key, function(e){
       if (keysDown[key]) return;
       keysDown[key] = true;
-      play($video);
+      console.log('jwerty', key);
+      $el.trigger('startVideo', key);
+      socket.emit('keydown', key);
     });
-
     $('html').bind('keyup', jwerty.event(key, function (){
       keysDown[key] = false;
       if ( ! capsOn) {
-        stop($video);
+        $el.trigger('stopVideo', key);
+        socket.emit('keyup', key);
       }
     }));
-  }
+  });
+
 
   function play($video) {
-    var $container = $video.parent()
+    if (hide) return;
+    var $container = $video.parent();
     if ( ! $container.is(':last-child') ) {
       $el.append($container);
       $container.css('opacity');
@@ -113,45 +130,6 @@ $(function() {
     capsOn = false;
   });
   $(window).capslockstate();
-
-  // track special keys for mouse interaction
-
-  // fade
-  var key = 'tab';
-  jwerty.key(key, function(){
-
-    if (keysDown[key]) return;
-    keysDown[key] = true;
-
-    var $video
-    $videos.mousedown(function(e) {
-      var startPosition = {
-        x: screenX,
-        y: screenY
-      };
-      $video = $(e.currentTarget);
-
-      $(window).mousemove(function(e) {
-        $video.css('opacity', (e.screenY) / 400);
-      });
-      $video.one('pause', function(){
-        setTimeout(function(){
-          $video.css('opacity', '');
-        }, 100);
-      });
-    })
-      .mouseup(function() {
-        $(window).unbind("mousemove");
-      });
-  });
-
-  $('html').on('keyup', jwerty.event(key, function (){
-    // holding down a key triggers multiple events.
-    keysDown[key] = false;
-    if ( ! capsOn) {
-      $videos.unbind('mousedown');
-    }
-  }));
 
   // black out (spacebar)
   jwerty.key('space', function(){
@@ -210,24 +188,21 @@ $(function() {
 
 
   // websocket
-  /*
+  //*
+
+  var hide = false;
+  jwerty.key('ctrl+H', function(){
+    hide = ! hide;
+  });
   var socket = io();
   socket.on('connect', function () {
-    socket.emit('hi!', 'there', function(ret){
-      console.log(ret);
-    });
-  });
-  socket.on('message', function (msg) {
-    console.log('message', msg);
-    // my msg
-  });
 
-  jwerty.key('[a-z]', function(e){
-    //console.log(e);
-    socket.emit('keydown', e.keycode);
   });
-  $('html').on('keyup', function (e){
-    console.log('keyup', e)
+  socket.on('keydown', function (key) {
+    // my msg
+    $el.trigger('startVideo', [key]);
   });
-  */
+  socket.on('keyup', function (key) {
+    $el.trigger('stopVideo', [key]);
+  });
 });

@@ -28,7 +28,6 @@ var app = express();
 var server = require('http').createServer(app);
 var socketio = require('socket.io')(server, {
   serveClient: (config.env === 'production') ? false : true,
-  path: '/socket.io-client'
 });
 require('./config/socketio')(socketio);
 require('./config/express')(app);
@@ -58,7 +57,7 @@ require('./routes')(app);
 //  console.log('Express SPDY server listening on %d, in %s mode', config.port, app.get('env'));
 //});
 
-// old listen command
+// http listen command
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
   console.log('max sockets', http.globalAgent.maxSockets);

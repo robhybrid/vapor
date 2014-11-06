@@ -18,6 +18,9 @@ function onConnect(socket) {
   });
 
   // Insert sockets below
+  socket.on('hi!', function(name, fn) {
+    fn('woot!');
+  });
 }
 
 module.exports = function (socketio) {

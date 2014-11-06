@@ -40,7 +40,7 @@
       <input class="fade-duration" type="range" min="0" max="3000" value="300">
 
       <label>Perspective</label>
-      <input type="range" min="0" max="1000" value="500" data-css-property="perspective" data-target="video-container">
+      <input type="range" min="1" max="1000" value="500" data-css-property="perspective" data-target=".video-container" data-unit="px">
 
       <label>X-Rotation</label>
       <input type="range" min="0" max="360" value="0" data-transform="rotateX" data-unit="deg" step="0.1">
@@ -56,6 +56,9 @@
       <label>Z-Position</label>
       <input type="range" min="-1000" max="1000" value="0" data-translate="2" data-unit="px">
 
+      <label>Opacity</label>
+      <input type="range" min="0" max="1000" value="1000" data-ratio="0.001" data-css-property="opacity">
+
     </div>
 
     <!--[if lt IE 9]>
@@ -68,7 +71,7 @@
       <script src="bower_components/lodash/dist/lodash.compat.js"></script>
       <script src="bower_components/jwerty/jwerty.js"></script>
       <!-- endbower -->
-      <script src="socket.io-client/socket.io.js"></script>
+      <script src="socket.io/socket.io.js"></script>
     <!-- endbuild -->
 
         <!-- build:js({.tmp,client}) app/app.js -->

@@ -2,7 +2,7 @@ $(function() {
 
 
   // load videos
-  var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm,./';
+  var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm<.?';
   var $videos = $('video');
   var keyPointer = 0;
   $.ajax({
@@ -60,21 +60,19 @@ $(function() {
         $videos = $('video');
 
       } else {
-        // recursively descend.
+        // must be a directory
+        // todo: recursively descend.
         return loadVideo($file.next());
       }
     };
-
-    // set the stage
-
   });
 
 
   var keysDown = {};
   var $el = $('#main');
-  function mapVideo(key, video){
+  function mapVideo(key, video) {
     var $video = $(video);
-    jwerty.key(key, function(){
+    jwerty.key(key, function() {
       if (keysDown[key]) return;
       keysDown[key] = true;
       play($video);
@@ -145,9 +143,10 @@ $(function() {
       .mouseup(function() {
         $(window).unbind("mousemove");
       });
-
   });
-  $('html').bind('keyup', jwerty.event(key, function (){
+
+  $('html').on('keyup', jwerty.event(key, function (){
+    // holding down a key triggers multiple events.
     keysDown[key] = false;
     if ( ! capsOn) {
       $videos.unbind('mousedown');
@@ -197,8 +196,38 @@ $(function() {
 
   $('[data-css-property]').on('input', function(e){
     var $slider = $(e.currentTarget),
-      data = $('[data-css-property]').data();
-    console.log($('.' + (data.target || 'video') + ':last'), data.cssProperty, $slider.val() + (data.unit || ''));
-    $('.' + (data.target || 'video') + ':last').css(data.cssProperty, $slider.val() + (data.unit || 'px'));
+      data = $slider.data();
+
+    console.log($((data.target || 'video') + ':last'),
+      data.cssProperty,
+      ((parseInt($slider.val()) + parseInt(data.offset || 0) ) * (data.ratio || 1) ) + (data.unit || '')
+    );
+    //TODO: Save the last played video instead to using :last.
+    $((data.target || 'video') + ':last').css(
+      data.cssProperty,
+      ((parseInt($slider.val()) + parseInt(data.offset || 0) ) * (data.ratio || 1) ) + (data.unit || ''));
   });
+
+
+  // websocket
+  /*
+  var socket = io();
+  socket.on('connect', function () {
+    socket.emit('hi!', 'there', function(ret){
+      console.log(ret);
+    });
+  });
+  socket.on('message', function (msg) {
+    console.log('message', msg);
+    // my msg
+  });
+
+  jwerty.key('[a-z]', function(e){
+    //console.log(e);
+    socket.emit('keydown', e.keycode);
+  });
+  $('html').on('keyup', function (e){
+    console.log('keyup', e)
+  });
+  */
 });

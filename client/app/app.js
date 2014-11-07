@@ -165,15 +165,7 @@ $(function() {
       unit = $slider.data('unit');
     $slider.on('input', function(e) {
       transform[method] = $(e.currentTarget).val() + unit;
-      if (client == 'self') {
-        apply3dTransform();
-      } else {
-        socket.emit('transform', JSON.stringify({
-          clientID: client,
-          transform: transform,
-          translate: translate
-        }));
-      }
+      apply3dTransform();
     });
   });
 
@@ -189,12 +181,20 @@ $(function() {
       translate = data.translate;
       transform = data.transform;
     }
-    $('video:last').css('transform',
-      'translate3d(' + translate.join(',') + ') '
-      + Object.keys(transform).map(function(method) {
-        return method + '(' + transform[method] + ')';
-      }).join(' ')
-    );
+    if ( data && data.client || client == 'self' ) {
+      $('video:last').css('transform',
+        'translate3d(' + translate.join(',') + ') '
+        + Object.keys(transform).map(function(method) {
+          return method + '(' + transform[method] + ')';
+        }).join(' ')
+      );
+    } else {
+      socket.emit('transform', JSON.stringify({
+        clientID: client,
+        transform: transform,
+        translate: translate
+      }));
+    }
   }
 
   $('[data-css-property]').on('input', function(e){

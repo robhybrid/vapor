@@ -34,7 +34,7 @@ function onConnect(socket, io) {
   });
   socket.on('transform', function(str){
     var data = JSON.parse(str);
-    io.sockets.connected[data.clientID].emit('transform', data);
+    io.sockets.connected[data.clientID] && io.sockets.connected[data.clientID].emit('transform', data);
   });
 
 }

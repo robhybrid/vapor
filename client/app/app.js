@@ -43,6 +43,7 @@ $(function() {
         // Once the video is ready to play, stop it and start loading the next one.
         $video.one('canplaythrough', function(e) {
           $(e.currentTarget)[0].pause();
+          // TODO: implement loading bar.
           console.log('loaded video', ++c);
           loadVideo($file.next());
         });
@@ -132,12 +133,22 @@ $(function() {
   });
   $(window).capslockstate();
 
-  // black out (spacebar)
-  jwerty.key('space', function(){
-    $videos.each(function(i, el){
-      stop($(el));
+  // blackout (spacebar)
+  var specialKeys = {
+    'space': function(){
+      $videos.each(function(i, el){
+        stop($(el));
+      });
+    }
+  };
+  $.each(specialKeys, function(key, action) {
+    jwerty.key(key, function() {
+      action();
+      socket.emit('keydown', key);
     });
   });
+
+
 
   // sliders.
   jwerty.key('option+s', function(){
@@ -199,12 +210,15 @@ $(function() {
   // Use websocket to connect to other outs.
   var hide = false;
   jwerty.key('ctrl+H', function(){
+    $videos.each(function(i, el){
+      stop($(el));
+    });
     hide = ! hide;
   });
   var socket = io();
   socket.on('keydown', function (key) {
-    // my msg
     $el.trigger('startVideo', [key]);
+    specialKeys[key] && specialKeys[key]();
   });
   socket.on('keyup', function (key) {
     $el.trigger('stopVideo', [key]);

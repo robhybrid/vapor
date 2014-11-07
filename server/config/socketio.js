@@ -5,22 +5,26 @@
 'use strict';
 
 var config = require('./environment');
+var _ = require('lodash');
 
+var clients = {};
 // When the user disconnects.. perform this
 function onDisconnect(socket) {
+  console.log('socket disconnect', socket.id);
+  delete clients[socket.id];
 }
 
 // When the user connects.. perform this
-function onConnect(socket) {
+function onConnect(socket, io) {
+  clients[socket.id] = true;
+  console.log('socket', socket.id);
+  io.sockets.emit('clients', JSON.stringify(clients));
   // When the client emits 'info', this listens and executes
   socket.on('info', function (data) {
-    console.info('[%s] %s', socket.address, JSON.stringify(data, null, 2));
+    console.info('[%s] %s',  socket.address, JSON.stringify(data, null, 2));
   });
 
-  // Insert sockets below
-  socket.on('hi!', function(name, fn) {
-    fn('woot!');
-  });
+  //
 
   socket.on('keydown', function(data){
     socket.broadcast.emit('keydown', data);
@@ -28,6 +32,10 @@ function onConnect(socket) {
   socket.on('keyup', function(data){
     socket.broadcast.emit('keyup', data);
   });
+  socket.on('transform', function(data){
+
+  });
+
 }
 
 module.exports = function (socketio) {
@@ -60,7 +68,7 @@ module.exports = function (socketio) {
     });
 
     // Call onConnect.
-    onConnect(socket);
+    onConnect(socket, socketio);
     console.info('[%s] CONNECTED', socket.address);
   });
 };

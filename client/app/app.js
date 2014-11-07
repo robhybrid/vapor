@@ -39,9 +39,8 @@ $(function() {
         });
 
         $video.one('canplaythrough', function(e) {
-          console.log('canplaythrough !', e.currentTarget.src);
           $(e.currentTarget)[0].pause();
-          console.log(++c);
+          console.log('loaded video', ++c);
           loadVideo($file.next());
         });
 
@@ -88,7 +87,6 @@ $(function() {
     jwerty.key(key, function(e){
       if (keysDown[key]) return;
       keysDown[key] = true;
-      console.log('jwerty', key);
       $el.trigger('startVideo', key);
       socket.emit('keydown', key);
     });
@@ -153,7 +151,15 @@ $(function() {
       unit = $slider.data('unit');
     $slider.on('input', function(e) {
       transform[method] = $(e.currentTarget).val() + unit;
-      apply3dTransform();
+      if (client = 'self') {
+        apply3dTransform();
+      } else {
+        socket.emit('transform', JSON.stringify({
+          clientID: clientID,
+          transform: transform,
+          translate: translate
+        }));
+      }
     });
   });
 
@@ -175,11 +181,6 @@ $(function() {
   $('[data-css-property]').on('input', function(e){
     var $slider = $(e.currentTarget),
       data = $slider.data();
-
-    console.log($((data.target || 'video') + ':last'),
-      data.cssProperty,
-      ((parseInt($slider.val()) + parseInt(data.offset || 0) ) * (data.ratio || 1) ) + (data.unit || '')
-    );
     //TODO: Save the last played video instead to using :last.
     $((data.target || 'video') + ':last').css(
       data.cssProperty,
@@ -189,20 +190,51 @@ $(function() {
 
   // websocket
   //*
-
   var hide = false;
   jwerty.key('ctrl+H', function(){
     hide = ! hide;
   });
   var socket = io();
-  socket.on('connect', function () {
-
-  });
   socket.on('keydown', function (key) {
     // my msg
     $el.trigger('startVideo', [key]);
   });
   socket.on('keyup', function (key) {
     $el.trigger('stopVideo', [key]);
+  });
+
+  // client selector
+  var client = 'self',
+    clients = {};
+  jwerty.key('option+c', function() {
+    $('.clients').toggleClass('hidden');
+  });
+  socket.on('connect', function () {
+    // get connected clients
+  });
+
+  function renderClientList() {
+    var $clients = $('.clients').html('');
+
+    $.each(clients, function(id) {
+      var _id = (id == socket.io.engine.id) ? 'self' : id;
+
+      $clients.append($('<div>', {
+        'class' : 'client' + (client == _id ? ' selected' : ''),
+        id: _id,
+        text: _id
+      }));
+    });
+
+  }
+  socket.on('clients', function(socketClients){
+    clients = JSON.parse(socketClients);
+    renderClientList();
+  });
+  socket.on('clientConnect', function(client){
+    // add client.
+  });
+  socket.on('clientDisconnect', function(clientID){
+    // remove client.
   });
 });

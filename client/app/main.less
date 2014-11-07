@@ -8,11 +8,9 @@ body, html {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
 }
-html {
-  box-sizing: border-box;
-}
+
 *, *:before, *:after {
-  box-sizing: inherit;
+  box-sizing: border-box;
 }
 
 div#main {
@@ -49,12 +47,6 @@ video {
 
 // sliders
 .adjustments {
-  position: absolute;
-  top: 10%;
-  z-index: 1;
-  cursor: default;
-  height: 80%;
-  width: 100%;
   label {
     display: inline-block;
     transform: rotate(-90deg);
@@ -70,6 +62,30 @@ video {
     padding: 0;
   }
 }
+.controller {
+  position: absolute;
+  top: 10%;
+  z-index: 1;
+  cursor: default;
+  height: 80%;
+  width: 100%;
+}
 .hidden {
   display: none;
+}
+.clients {
+  .client {
+    padding-top: 2em;
+    margin: 2em;
+    display: inline-block;
+    height: 5em;
+    width: 8em;
+    border: 1px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.2);
+    text-align: center;
+    overflow: hidden;
+    .selected {
+      border-color: #fff;
+    }
+  }
 }

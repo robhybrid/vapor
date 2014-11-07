@@ -10,8 +10,14 @@ run `grunt serve`
 
 mash some keys (starting with 'Q').
 
+Caps-lock to sustain.
+
+Spacebar to blackout.
+
 Command-shift-F to enter full screen.
 
-Option-s brings up fade and Video mapping controls.
+Option-S brings up fade and Video mapping controls.
 
-use Ctrl-H to not play video on current screen.
+Option-C bings up clients.
+
+Use Ctrl-H to not play video on current screen.

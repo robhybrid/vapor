@@ -103,12 +103,12 @@ $(function() {
     }));
   });
 
-
+  var $lastVideo = $('video:last');
   function play($video) {
     if (hide) return;
     var $container = $video.parent();
     if ( ! $container.is(':last-child') ) {
-      $el.append($container);
+      $container.parent().append($container);
       $container.css('opacity');
     }
     $video[0].play();
@@ -116,6 +116,7 @@ $(function() {
     $video.css({
       top: ($container.height() - $video.height()) /2
     });
+    $lastVideo = $video;
   }
 
   function stop($video) {
@@ -182,7 +183,7 @@ $(function() {
       transform = data.transform;
     }
     if ( data && data.client || client == 'self' ) {
-      $('video:last').css('transform',
+      $lastVideo.css('transform',
         'translate3d(' + translate.join(',') + ') '
         + Object.keys(transform).map(function(method) {
           return method + '(' + transform[method] + ')';
@@ -199,9 +200,9 @@ $(function() {
 
   $('[data-css-property]').on('input', function(e){
     var $slider = $(e.currentTarget),
-      data = $slider.data();
-    //TODO: Save the last played video instead to using :last.
-    $((data.target || 'video') + ':last').css(
+      data = $slider.data(),
+      $el = data.target ? $lastVideo.closest(data.target) : $lastVideo;
+    $el.css(
       data.cssProperty,
       ((parseInt($slider.val()) + parseInt(data.offset || 0) ) * (data.ratio || 1) ) + (data.unit || ''));
   });

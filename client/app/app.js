@@ -250,6 +250,9 @@ $(function() {
   };
   socket.on('clients', function(socketClients) {
     clients = JSON.parse(socketClients);
+    if ( ! clients[client]) {
+      client = 'self';
+    }
     renderClientList();
   });
 

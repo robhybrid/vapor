@@ -9,9 +9,10 @@ var _ = require('lodash');
 
 var clients = {};
 // When the user disconnects.. perform this
-function onDisconnect(socket) {
+function onDisconnect(socket, io) {
   console.log('socket disconnect', socket.id);
   delete clients[socket.id];
+  io.sockets.emit('clients', JSON.stringify(clients));
 }
 
 // When the user connects.. perform this
@@ -64,7 +65,7 @@ module.exports = function (socketio) {
 
     // Call onDisconnect.
     socket.on('disconnect', function () {
-      onDisconnect(socket);
+      onDisconnect(socket, socketio);
       console.info('[%s] DISCONNECTED', socket.address);
     });
 

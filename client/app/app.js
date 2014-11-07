@@ -8,6 +8,7 @@ $(function() {
     url: 'assets/video'
   }).done(function(data){
       var c = 0;
+      // todo: create and API instead of using screenscraping.
       var $files = $('#files li', data);
     loadVideo($files.first());
     function loadVideo($file) {
@@ -31,21 +32,22 @@ $(function() {
           autoplay: true
         });
 
-        $video.on('error', function(e){
+        // Reload the video if there's an error.
+        // This is a work-around for intermittent CONTENT LENGTH ERROR
+        $video.on('error', function(e) {
           console.error('video error, reloading', arguments);
-          // TODO: find the exact error type.
           var $video = $(e.currentTarget);
           $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString())
         });
 
+        // Once the video is ready to play, stop it and start loading the next one.
         $video.one('canplaythrough', function(e) {
           $(e.currentTarget)[0].pause();
           console.log('loaded video', ++c);
           loadVideo($file.next());
         });
 
-        // todo: use a template.
-        // insert video in dom.
+        // Insert video in dom.
         $el.append(
           $('<div>', {
               'class': 'video-container off',
@@ -53,12 +55,13 @@ $(function() {
             }
           ).append($video)
         );
-        // map keys to video
+
+        // Map the video onto a key.
         mapVideo(videoKeyChars[keyPointer++], $video);
         $videos = $('video');
 
       } else {
-        // must be a directory
+        // Must be a directory
         // todo: recursively descend.
         return loadVideo($file.next());
       }
@@ -151,11 +154,11 @@ $(function() {
       unit = $slider.data('unit');
     $slider.on('input', function(e) {
       transform[method] = $(e.currentTarget).val() + unit;
-      if (client = 'self') {
+      if (client == 'self') {
         apply3dTransform();
       } else {
         socket.emit('transform', JSON.stringify({
-          clientID: clientID,
+          clientID: client,
           transform: transform,
           translate: translate
         }));
@@ -167,9 +170,14 @@ $(function() {
     var $slider = $(e.currentTarget),
       data = $slider.data();
     translate[parseInt(data.translate)] = $slider.val() + data.unit;
+    // it client == self
     apply3dTransform();
   });
-  function apply3dTransform(){
+  function apply3dTransform(data) {
+    if (data) {
+      translate = data.translate;
+      transform = data.transform;
+    }
     $('video:last').css('transform',
       'translate3d(' + translate.join(',') + ') '
       + Object.keys(transform).map(function(method) {
@@ -188,8 +196,7 @@ $(function() {
   });
 
 
-  // websocket
-  //*
+  // Use websocket to connect to other outs.
   var hide = false;
   jwerty.key('ctrl+H', function(){
     hide = ! hide;
@@ -209,32 +216,30 @@ $(function() {
   jwerty.key('option+c', function() {
     $('.clients').toggleClass('hidden');
   });
-  socket.on('connect', function () {
-    // get connected clients
-  });
 
   function renderClientList() {
     var $clients = $('.clients').html('');
-
     $.each(clients, function(id) {
       var _id = (id == socket.io.engine.id) ? 'self' : id;
-
-      $clients.append($('<div>', {
+      var $client = $('<div>', {
         'class' : 'client' + (client == _id ? ' selected' : ''),
         id: _id,
         text: _id
-      }));
-    });
+      }).on('click', clientClick);
 
+      $clients.append($client);
+    });
   }
-  socket.on('clients', function(socketClients){
+  var clientClick = function(e) {
+    client = $(e.currentTarget).attr('id');
+    renderClientList();
+  };
+  socket.on('clients', function(socketClients) {
     clients = JSON.parse(socketClients);
     renderClientList();
   });
-  socket.on('clientConnect', function(client){
-    // add client.
-  });
-  socket.on('clientDisconnect', function(clientID){
-    // remove client.
+
+  socket.on('transform', function(data){
+    apply3dTransform(data);
   });
 });

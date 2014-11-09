@@ -5,67 +5,51 @@ $(function() {
   var $videos = $('video');
   var keyPointer = 0;
   $.ajax({
-    url: 'assets/video'
-  }).done(function(data){
-      var c = 0;
-      // todo: create and API instead of using screenscraping.
-      var $files = $('#files li', data);
-    loadVideo($files.first());
-    function loadVideo($file) {
-      if ($file.length == 0) {
-        return;
+    url: 'api/files'
+  }).done(function(files){
+    loadVideo(files, 0);
+    function loadVideo(files, i) {
+
+      if ( ! videoKeyChars[keyPointer+1]) {
+        console.log('done loading');
+        return ;
       }
-      if ($('a', $file).attr('title')[0] === '.') {
-        // skip hidden files
-        return loadVideo($file.next());
-      }
-      if ($('.size', $file).text()) { //only files have sizes
-        if ( ! videoKeyChars[keyPointer+1]) {
-          return loadVideo($file.next());
-        }
 
-        var $video = $('<video>', {
-          id: 'v' + keyPointer,
-          src:  $('a', $file).attr('href'),
-          loop: 'loop',
-          preload: 'auto',
-          autoplay: true
-        });
+      var $video = $('<video>', {
+        id: 'v' + keyPointer,
+        src:  files[i],
+        loop: 'loop',
+        preload: 'auto',
+        autoplay: true
+      });
 
-        // Reload the video if there's an error.
-        // This is a work-around for intermittent CONTENT LENGTH ERROR
-        $video.on('error', function(e) {
-          console.error('video error, reloading', arguments);
-          var $video = $(e.currentTarget);
-          $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString())
-        });
+      // Reload the video if there's an error.
+      // This is a work-around for intermittent CONTENT LENGTH ERROR
+      $video.on('error', function(e) {
+        console.error('video error, reloading', arguments);
+        var $video = $(e.currentTarget);
+        $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString())
+      });
 
-        // Once the video is ready to play, stop it and start loading the next one.
-        $video.one('canplaythrough', function(e) {
-          $(e.currentTarget)[0].pause();
-          // TODO: implement loading bar.
-          console.log('loaded video', ++c);
-          loadVideo($file.next());
-        });
+      // Once the video is ready to play, stop it and start loading the next one.
+      $video.one('canplaythrough', function(e) {
+        $(e.currentTarget)[0].pause();
+        // TODO: implement loading bar.
+        loadVideo(files, ++i);
+      });
 
-        // Insert video in dom.
-        $el.append(
-          $('<div>', {
-              'class': 'video-container off',
-              id: 'vc' + keyPointer
-            }
-          ).append($video)
-        );
+      // Insert video in dom.
+      $el.append(
+        $('<div>', {
+            'class': 'video-container off',
+            id: 'vc' + keyPointer
+          }
+        ).append($video)
+      );
 
-        // Map the video onto a key.
-        mapVideo(videoKeyChars[keyPointer++], $video);
-        $videos = $('video');
-
-      } else {
-        // Must be a directory
-        // todo: recursively descend.
-        return loadVideo($file.next());
-      }
+      // Map the video onto a key.
+      mapVideo(videoKeyChars[keyPointer++], $video);
+      $videos = $('video');
     };
   });
 

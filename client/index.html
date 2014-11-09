@@ -33,9 +33,13 @@
 
     <!-- application content here -->
     <div id="main">
+      <div class="screen"></div>
     </div>
 
     <div class="clients controller hidden"></div>
+    <div class="screens hidden">
+
+    </div>
 
     <div class="adjustments controller hidden">
       <label>Fade Duration</label>
@@ -60,7 +64,6 @@
 
       <label>Opacity</label>
       <input type="range" min="0" max="1000" value="1000" data-ratio="0.001" data-css-property="opacity">
-
     </div>
 
 
@@ -81,6 +84,7 @@
         <!-- build:js({.tmp,client}) app/app.js -->
         <script src="app/app.js"></script>
           <!-- injector:js -->
+          <script src="app/Screen.js"></script>
           <script src="components/jquery.capslockstate.js"></script>
           <script src="components/navbar/navbar.controller.js"></script>
           <script src="components/socket/socket.service.js"></script>

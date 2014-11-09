@@ -74,8 +74,11 @@ video {
   display: none;
 }
 .clients {
+  &:before {
+    content: 'clients';
+    vertical-align: top;
+  }
   .client {
-    padding-top: 2em;
     margin: 2em;
     display: inline-block;
     height: 5em;

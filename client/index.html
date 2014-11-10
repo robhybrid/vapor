@@ -66,6 +66,8 @@
       <input type="range" min="0" max="1000" value="1000" data-ratio="0.001" data-css-property="opacity">
     </div>
 
+    <div class="files hidden controller"></div>
+    <div class="loader"></div>
 
 
     <!--[if lt IE 9]>
@@ -84,6 +86,7 @@
         <!-- build:js({.tmp,client}) app/app.js -->
         <script src="app/app.js"></script>
           <!-- injector:js -->
+          <script src="app/Client.js"></script>
           <script src="app/Screen.js"></script>
           <script src="components/jquery.capslockstate.js"></script>
           <script src="components/navbar/navbar.controller.js"></script>

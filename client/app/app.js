@@ -1,9 +1,11 @@
 $(function() {
 
   // load videos
-  var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm<.?';
+  var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm';
+    //videoKeyChars.concat(['comma', 'period', 'slash']);
   var $videos = $('video');
   var keyPointer = 0;
+  var socket = io();
   $.ajax({
     url: 'api/files'
   }).done(function(files){
@@ -27,22 +29,24 @@ $(function() {
   // TODO: implement require, because key-press events aren't getting - memory leak.
   bindSpecialKeys();
   function loadVideos(files, keys) {
+    $('video').remove();
     $('.video-container').remove();
     $(document.body).unbind('keydown.jwerty');
     //bindSpecialKeys();
+
     loadVideo(files, keys, 0);
   };
 
   function loadVideo(files, keys, i) {
     // called recursively
 
-    if ( ! videoKeyChars[i]) {
-      console.log('done loading all keys');
+    if ( ! videoKeyChars[i] || ! files[i]) {
+      console.log('done loading');
+      $('.loader').width(0);
       return;
     }
 
     var $video = $('<video>', {
-      id: 'v' + keyPointer,
       src:  files[i],
       loop: 'loop',
       preload: 'auto',
@@ -60,9 +64,14 @@ $(function() {
     // Once the video is ready to play, stop it and start loading the next one.
     $video.one('canplaythrough', function(e) {
       $(e.currentTarget)[0].pause();
-      // TODO: implement loading bar.
-      $('.loader')
       loadVideo(files, keys, ++i);
+
+      var max = Math.min(files.length, keys.length);
+      $('.loader').css('width',
+        i == max ?
+          0 :
+          (i / max * 100) + '%'
+      );
     });
 
     // Insert video in dom.
@@ -237,7 +246,7 @@ $(function() {
 
   // Use websocket to connect to other outs.
 
-  var socket = io();
+
   socket.on('keydown', function (key) {
     $el.trigger('startVideo', [key]);
     specialKeys[key] && specialKeys[key]();

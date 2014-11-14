@@ -77,23 +77,20 @@
     <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
     <!-- build:js({client,node_modules}) app/vendor.js -->
-      <!-- bower:js -->
-      <script src="bower_components/jquery/dist/jquery.js"></script>
-      <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-      <script src="bower_components/jwerty/jwerty.js"></script>
-      <!-- endbower -->
-      <script src="socket.io/socket.io.js"></script>
+    <!--<script src="components/socket/socket.service.js"></script>-->
+      <!--<script src="bower_components/lodash/dist/lodash.compat.js"></script>-->
+
+      <script data-main="app/config" src="bower_components/requirejs/require.js"></script>
+
+      <!--<script src="socket.io/socket.io.js"></script>-->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,client}) app/app.js -->
-        <script src="app/app.js"></script>
-          <!-- injector:js -->
-          <script src="app/Client.js"></script>
-          <script src="app/Screen.js"></script>
-          <script src="components/jquery.capslockstate.js"></script>
-          <script src="components/navbar/navbar.controller.js"></script>
-          <script src="components/socket/socket.service.js"></script>
-          <!-- endinjector -->
+        
+          <!--<script src="app/Client.js"></script>-->
+          <!--<script src="app/Screen.js"></script>-->
+
+
         <!-- endbuild -->
 </body>
 </html>

@@ -8,8 +8,10 @@
  *
  * Date: Sun Feb 3 2013 21:34:00 GMT
  */
-(function($) {
 
+define(function(require) {
+
+  var $ = require('jquery');
 	var capsLockState = "unknown";
 
 	var methods = {
@@ -116,7 +118,7 @@
 				$(window).unbind('.capslockstate');
 			})
 		}
-	}
+	};
 
 	jQuery.fn.capslockstate = function(method) {
 
@@ -130,4 +132,4 @@
 		}
 
 	};
-})(jQuery);
+});

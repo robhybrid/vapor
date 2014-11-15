@@ -33,7 +33,6 @@ video {
 .video-container {
   height: 100%;
   opacity: 1;
-  perspective: 500;
   position: absolute;
   width: 100%;
   top: 0;
@@ -43,7 +42,10 @@ video {
 }
 
 // hide the mouse
-#main {cursor: none;}
+#main {
+  perspective: 500;
+  cursor: none;
+}
 
 // sliders
 .adjustments {
@@ -91,4 +93,11 @@ video {
       border-color: rgba(255,255,255,0.8);
     }
   }
+}
+.screen {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
 }

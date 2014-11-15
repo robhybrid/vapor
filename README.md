@@ -23,3 +23,7 @@ Option-C brings up clients.
 Use Ctrl-H to not play video on current screen.
 
 Option-F for File browser.
+
+Ctrl-S shows screens
+
+Ctrl-{number} selects or creates screen.

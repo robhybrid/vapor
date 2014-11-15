@@ -3,6 +3,8 @@ define(function(require) {
   var $ = require('jquery');
   var jwerty = require('jwerty');
   var io = require('socket.io');
+  var Screens = require('Screens');
+
   require('capslockstate');
 
   $(function() {
@@ -35,10 +37,10 @@ define(function(require) {
 
     bindSpecialKeys();
     function loadVideos(files, keys) {
-      $('video').remove();
-      $('.video-container').remove();
+      $('video', Screens.current.$el).remove();
+      $('.video-container', Screens.current.$el).remove();
       //bindSpecialKeys();
-      videoKeyMap = {};
+      Screens.current.videoKeyMap = {};
 
       loadVideo(files, keys, 0);
     };
@@ -81,7 +83,7 @@ define(function(require) {
       });
 
       // Insert video in dom.
-      $screen.append(
+      Screens.current.$el.append(
         $('<div>', {
             'class': 'video-container off',
             id: 'vc' + keyPointer
@@ -94,19 +96,24 @@ define(function(require) {
       $videos = $('video');
     }
 
-
+    // TODO: initial Screens and get current;
     var $screen = $('.screen:last');
-    var videoKeyMap = {};
+
     function mapVideo(key, video) {
       var $video = $(video);
-      videoKeyMap[key] = $video;
+      Screens.current.videoKeyMap[key] = $video;
     }
 
     $screen.on('startVideo', function(e, key) {
-      videoKeyMap[key] && play(videoKeyMap[key]);
+      _.each(Screens, function(screen, index){
+        screen.videoKeyMap[key] && play(screen.videoKeyMap[key]);
+      })
+
     });
     $screen.on('stopVideo', function(e, key) {
-      videoKeyMap[key] && stop(videoKeyMap[key]);
+      _.each(Screens, function(screen){
+        screen.videoKeyMap[key] && stop(screen.videoKeyMap[key]);
+      });
     });
 
     // bind keyboard events
@@ -115,13 +122,13 @@ define(function(require) {
       jwerty.key(key, function(e){
         if (keysDown[key]) return;
         keysDown[key] = true;
-        $screen.trigger('startVideo', key);
+        $('.screen').trigger('startVideo', key);
         socket.emit('keydown', key);
       });
       $('html').bind('keyup', jwerty.event(key, function (){
         keysDown[key] = false;
         if ( ! capsOn) {
-          $screen.trigger('stopVideo', key);
+          $('.screen').trigger('stopVideo', key);
           socket.emit('keyup', key);
         }
       }));
@@ -225,7 +232,7 @@ define(function(require) {
         transform = data.transform;
       }
       if ( data && data.client || client == 'self' ) {
-        $screen.css('transform',
+        Screens.current.$el.css('transform',
           'translate3d(' + translate.join(',') + ') '
           + Object.keys(transform).map(function(method) {
             return method + '(' + transform[method] + ')';
@@ -243,7 +250,7 @@ define(function(require) {
     $('[data-css-property]').on('input', function(e){
       var $slider = $(e.currentTarget),
         data = $slider.data();
-      $screen.css(
+      Screens.current.$el.css(
         data.cssProperty,
         ((parseInt($slider.val()) + parseInt(data.offset || 0) ) * (data.ratio || 1) ) + (data.unit || ''));
     });
@@ -252,11 +259,12 @@ define(function(require) {
     // Use websocket to connect to other outs.
 
     socket.on('keydown', function (key) {
-      $screen.trigger('startVideo', [key]);
+
+      $('.screen').trigger('startVideo', [key]);
       specialKeys[key] && specialKeys[key]();
     });
     socket.on('keyup', function (key) {
-      $screen.trigger('stopVideo', [key]);
+      $('.screen').trigger('stopVideo', [key]);
     });
 
     // client selector

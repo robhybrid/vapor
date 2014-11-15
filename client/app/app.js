@@ -26,13 +26,12 @@ $(function() {
     });
   });
 
-  // TODO: implement require, because key-press events aren't getting - memory leak.
   bindSpecialKeys();
   function loadVideos(files, keys) {
     $('video').remove();
     $('.video-container').remove();
-    $(document.body).unbind('keydown.jwerty');
     //bindSpecialKeys();
+    videoKeyMap = {};
 
     loadVideo(files, keys, 0);
   };
@@ -75,7 +74,7 @@ $(function() {
     });
 
     // Insert video in dom.
-    $el.append(
+    $screen.append(
       $('<div>', {
           'class': 'video-container off',
           id: 'vc' + keyPointer
@@ -89,17 +88,17 @@ $(function() {
   }
 
 
-  var $el = $('#main');
+  var $screen = $('.screen:last');
   var videoKeyMap = {};
   function mapVideo(key, video) {
     var $video = $(video);
     videoKeyMap[key] = $video;
   }
 
-  $el.on('startVideo', function(e, key) {
+  $screen.on('startVideo', function(e, key) {
     videoKeyMap[key] && play(videoKeyMap[key]);
   });
-  $el.on('stopVideo', function(e, key) {
+  $screen.on('stopVideo', function(e, key) {
     videoKeyMap[key] && stop(videoKeyMap[key]);
   });
 
@@ -109,13 +108,13 @@ $(function() {
     jwerty.key(key, function(e){
       if (keysDown[key]) return;
       keysDown[key] = true;
-      $el.trigger('startVideo', key);
+      $screen.trigger('startVideo', key);
       socket.emit('keydown', key);
     });
     $('html').bind('keyup', jwerty.event(key, function (){
       keysDown[key] = false;
       if ( ! capsOn) {
-        $el.trigger('stopVideo', key);
+        $screen.trigger('stopVideo', key);
         socket.emit('keyup', key);
       }
     }));
@@ -219,7 +218,7 @@ $(function() {
       transform = data.transform;
     }
     if ( data && data.client || client == 'self' ) {
-      $lastVideo.css('transform',
+      $screen.css('transform',
         'translate3d(' + translate.join(',') + ') '
         + Object.keys(transform).map(function(method) {
           return method + '(' + transform[method] + ')';
@@ -236,9 +235,8 @@ $(function() {
 
   $('[data-css-property]').on('input', function(e){
     var $slider = $(e.currentTarget),
-      data = $slider.data(),
-      $el = data.target ? $lastVideo.closest(data.target) : $lastVideo;
-    $el.css(
+      data = $slider.data();
+    $screen.css(
       data.cssProperty,
       ((parseInt($slider.val()) + parseInt(data.offset || 0) ) * (data.ratio || 1) ) + (data.unit || ''));
   });
@@ -246,13 +244,12 @@ $(function() {
 
   // Use websocket to connect to other outs.
 
-
   socket.on('keydown', function (key) {
-    $el.trigger('startVideo', [key]);
+    $screen.trigger('startVideo', [key]);
     specialKeys[key] && specialKeys[key]();
   });
   socket.on('keyup', function (key) {
-    $el.trigger('stopVideo', [key]);
+    $screen.trigger('stopVideo', [key]);
   });
 
   // client selector

@@ -4,6 +4,8 @@ installation:
 
 `bower install`
 
+`brew install ffmpeg`
+
 put clips in client/assets/video
 
 run `grunt serve`

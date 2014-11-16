@@ -4,14 +4,14 @@ define(function(require) {
   var jwerty = require('jwerty');
   var io = require('socket.io');
   var Screens = require('Screens');
+  var keymap = require('keymap');
 
   require('capslockstate');
 
   $(function() {
 
     // load videos
-    var videoKeyChars = 'qwertyuiopasdfghjkl;zxcvbnm';
-      //videoKeyChars.concat(['comma', 'period', 'slash']);
+    var videoKeyChars = ('qwertyuiopasdfghjkl;zxcvbnm'.split('')).concat(['comma','.','forward-slash']);
     var $videos = $('video');
     var keyPointer = 0;
     var socket = io();
@@ -26,7 +26,8 @@ define(function(require) {
           var _filename = file.replace(/^assets\/video\//, '');
           return $('<div>', {
             text: _filename,
-            'class': 'file'
+            'class': 'file',
+            style: 'background-image: url("assets/images/thumbs/' + encodeURI(_.last(_filename.split('/'))) + '/tn.png")'
           });
         });
       });
@@ -117,7 +118,7 @@ define(function(require) {
 
     // bind keyboard events
     var keysDown = {};
-    videoKeyChars.split('').forEach(function(key){
+    videoKeyChars.forEach(function(key){
       jwerty.key(key, function(e){
         if (keysDown[key]) return;
         keysDown[key] = true;

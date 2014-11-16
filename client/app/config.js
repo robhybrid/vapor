@@ -17,8 +17,10 @@ require.config({
     },
     capslockstate: {
       deps: ['jquery']
+    },
+    'jquery-keymap': {
+      deps: ['jquery']
     }
-
   },
   paths: {
     jquery: '../bower_components/jquery/dist/jquery',
@@ -26,7 +28,8 @@ require.config({
     "socket.io": '/socket.io/socket.io',
     jwerty: '../bower_components/jwerty/jwerty',
     underscore: '../bower_components/lodash/dist/lodash',
-    capslockstate: '../components/jquery.capslockstate'
+    capslockstate: '../components/jquery.capslockstate',
+    'jquery-keymap': '../bower_components/jquery-keymap/keymap'
   }
 });
 require(['./app']);

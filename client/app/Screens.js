@@ -19,23 +19,30 @@ define(function(require){
   for (var i=0; i<10; i++) {
     (function(index) {
       jwerty.key('ctrl+' + index, function() {
-        // select the screen, or transmit screen-change.
-        if (Screens[index]) {
-          Screens.current = Screens[index];
-        } else if ( Screens.current.$el.attr('style') ) {
+        if ( Screens.current.$el.attr('style') ) {
           // If the current screen is un-modified return
           // to avoid creating a bunch of duplicate screens on top of each other.
           Screens.current = Screens.add(index);
+        }
+        // select the screen, or transmit screen-change.
+        if (Screens.items[index]) {
+          Screens.select(index);
         }
       });
     })(i);
   }
 
   Screens.add = function(index) {
+    if (Screens.items[index]) {
+      return Screens.items[index];
+    }
+
     var screen = {
       $el: $('<div>', {
         'class': 'screen'
-      }),
+      }).append($('<label>', {
+          text: index
+        })),
       patches: [],
       videoKeyMap: {}
     };
@@ -44,10 +51,18 @@ define(function(require){
 
     Screens.items[index] = screen;
     if ( ! Screens.current) {
-      Screens.current = screen;
+      Screens.select(index);
     }
 
     return screen;
+  };
+
+  Screens.select = function(index) {
+    $('.screen').removeClass('selected');
+    Screens.items[index].$el
+      .addClass('selected')
+      .trigger('selected');
+    Screens.current = Screens.items[index];
   };
 
   Screens.remove = function(index) {

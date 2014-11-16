@@ -100,9 +100,32 @@ video {
   overflow: hidden;
   position: absolute;
   top: 0;
+  label {
+    color: #000;
+    text-align: center;
+    display: none;
+    position: absolute;
+    font-size: 20em;
+    opacity: 0.6;
+    top: 50%;
+    line-height: 0;
+    width: 100%;
+  }
 }
 .show-screens {
   .screen {
     background: rgba(255,255,255,0.8);
+    &.selected {
+      box-sizing: border-box;
+      border: 1em solid #fff;
+      background: rgba(255,255,255,0.4);
+      label {
+        color: #fff;
+        opacity: 1;
+      }
+    }
+    label {
+      display: block;
+    }
   }
 }

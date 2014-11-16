@@ -29,7 +29,7 @@ require.config({
     jwerty: '../bower_components/jwerty/jwerty',
     underscore: '../bower_components/lodash/dist/lodash',
     capslockstate: '../components/jquery.capslockstate',
-    'jquery-keymap': '../bower_components/jquery-keymap/keymap'
+    'jquery-keymap': '../components/jquery-keymap/keymap'
   }
 });
 require(['./app']);

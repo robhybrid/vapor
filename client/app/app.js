@@ -51,6 +51,7 @@ define(function(require) {
 
       if ( ! videoKeyChars[i] || ! files[i]) {
         console.log('done loading');
+        //keymap.render(Screens.current.videoKeyMap);
         $('.loader').width(0);
         return;
       }
@@ -103,6 +104,7 @@ define(function(require) {
     function mapVideo(key, video) {
       var $video = $(video);
       Screens.current.videoKeyMap[key] = $video;
+      keymap.setVideoKey($video, key);
     }
 
     $screen.on('startVideo', function(e, key) {

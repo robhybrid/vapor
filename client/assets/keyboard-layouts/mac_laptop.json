@@ -1,0 +1,292 @@
+{
+  "line": 22.5,
+  "keys": [
+
+    {
+      "code": 192,
+      "name": "`"
+    },
+    {
+      "code": 49,
+      "name": "1"
+    },
+    {
+      "code": 50,
+      "name": "2"
+    },
+    {
+      "code": 51,
+      "name": "3"
+    },
+    {
+      "code": 52,
+      "name": "4"
+    },
+    {
+      "code": 53,
+      "name": "5"
+    },
+    {
+      "code": 54,
+      "name": "6"
+    },
+    {
+      "code": 55,
+      "name": "7"
+    },
+    {
+      "code": 56,
+      "name": "8"
+    },
+    {
+      "code": 57,
+      "name": "9"
+    },
+    {
+      "code": 48,
+      "name": "0"
+    },
+    {
+      "code": 173,
+      "name": "-"
+    },
+    {
+      "code": 61,
+      "name": "="
+    },
+    {
+      "code": 8,
+      "name": "delete",
+      "width": 1.5
+    },
+    {
+      "type": "break"
+    },
+
+
+    {
+      "code": 9,
+      "name": "tab",
+      "width": 1.5
+    },
+    {
+      "code": 81,
+      "name": "q"
+    },
+    {
+      "code": 87,
+      "name": "w"
+    },
+    {
+      "code": 69,
+      "name": "e"
+    },
+    {
+      "code": 82,
+      "name": "r"
+    },
+    {
+      "code": 84,
+      "name": "t"
+    },
+    {
+      "code": 89,
+      "name": "y"
+    },
+    {
+      "code": 85,
+      "name": "u"
+    },
+    {
+      "code": 73,
+      "name": "i"
+    },
+    {
+      "code": 79,
+      "name": "o"
+    },
+    {
+      "code": 80,
+      "name": "p"
+    },
+    {
+      "code": 219,
+      "name": "["
+    },
+    {
+      "code": 221,
+      "name": "]"
+    },
+    {
+      "code": 220,
+      "name": "\\"
+    },
+    {
+      "type": "break"
+    },
+
+
+    {
+      "code": 20,
+      "name": "caps lock",
+      "width": 2
+    },
+    {
+      "code": 65,
+      "name": "a"
+    },
+    {
+      "code": 83,
+      "name": "s"
+    },
+    {
+      "code": 68,
+      "name": "d"
+    },
+    {
+      "code": 70,
+      "name": "f"
+    },
+    {
+      "code": 71,
+      "name": "g"
+    },
+    {
+      "code": 72,
+      "name": "h"
+    },
+    {
+      "code": 74,
+      "name": "j"
+    },
+    {
+      "code": 75,
+      "name": "k"
+    },
+    {
+      "code": 76,
+      "name": "l"
+    },
+    {
+      "code": 59,
+      "name": ";"
+    },
+    {
+      "code": 222,
+      "name": "'"
+    },
+    {
+      "code": 13,
+      "name": "enter",
+      "width": 1.5
+    },
+    {
+      "type": "break"
+    },
+
+
+    {
+      "code": 16,
+      "name": "shift",
+      "width": 2.5
+    },
+    {
+      "code": 90,
+      "name": "z"
+    },
+    {
+      "code": 88,
+      "name": "x"
+    },
+    {
+      "code": 67,
+      "name": "c"
+    },
+    {
+      "code": 86,
+      "name": "v"
+    },
+    {
+      "code": 66,
+      "name": "b"
+    },
+    {
+      "code": 78,
+      "name": "n"
+    },
+    {
+      "code": 77,
+      "name": "m"
+    },
+    {
+      "code": 188,
+      "name": ","
+    },
+    {
+      "code": 190,
+      "name": "."
+    },
+    {
+      "code": 191,
+      "name": "/"
+    },
+    {
+      "code": 16,
+      "name": "shift",
+      "width": 2
+    },
+    {
+      "type": "break"
+    },
+
+
+    {
+      "code": 17,
+      "name": "ctrl",
+      "width": 1.5
+    },
+    {
+      "code": 18,
+      "name": "opt",
+      "width": 1.5
+    },
+    {
+      "code": 55,
+      "name": "command",
+      "width": 1.5
+    },
+    {
+      "code": 32,
+      "name": "space",
+      "width": 5.5
+    },
+    {
+      "code": 55,
+      "name": "command",
+      "width": 1.5
+    },
+    {
+      "code": 18,
+      "name": "opt",
+      "width": 1.5
+    },
+    {
+      "code": 17,
+      "name": "ctrl",
+      "width": 1.5
+    },
+
+    {
+      "code": 37,
+      "name": "left"
+    },
+    {
+      "code": 40,
+      "name": "down"
+    },
+    {
+      "code": 39,
+      "name": "right"
+    }
+  ]
+}

@@ -22,10 +22,12 @@ Option-S brings up fade and Video mapping controls.
 
 Option-C brings up clients.
 
-Use Ctrl-H to not play video on current screen.
+Use Ctrl-H to not play video on current screen, useful speeding up playback when using 2-screen mode.
 
 Option-F for File browser.
 
-Ctrl-S shows screens
+Option-K shows keyboard layout.
+
+Ctrl-S shows screens.
 
 Ctrl-{number} selects or creates screen.

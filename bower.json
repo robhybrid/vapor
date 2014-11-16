@@ -7,7 +7,6 @@
     "jquery": "~1.11.0",
     "lodash": "~2.4.1",
     "jwerty": "~0.3.2",
-    "requirejs": "~2.1.15",
-    "jquery-keymap": "https://github.com/Andr3as/jQuery-Keymap.git#master"
+    "requirejs": "~2.1.15"
   }
 }

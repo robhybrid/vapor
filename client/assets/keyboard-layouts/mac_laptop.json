@@ -1,5 +1,5 @@
 {
-  "line": 22.5,
+  "line": 10,
   "keys": [
 
     {
@@ -269,24 +269,6 @@
       "code": 18,
       "name": "opt",
       "width": 1.5
-    },
-    {
-      "code": 17,
-      "name": "ctrl",
-      "width": 1.5
-    },
-
-    {
-      "code": 37,
-      "name": "left"
-    },
-    {
-      "code": 40,
-      "name": "down"
-    },
-    {
-      "code": 39,
-      "name": "right"
     }
   ]
 }

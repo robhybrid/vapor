@@ -38,6 +38,7 @@ define(function(require) {
 
     bindSpecialKeys();
     function loadVideos(files, keys) {
+      keymap.clear();
       $('video', Screens.current.$el).remove();
       $('.video-container', Screens.current.$el).remove();
       //bindSpecialKeys();

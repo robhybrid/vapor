@@ -23,6 +23,9 @@ define(function(require){
         // TODO.
       });
     },
+    clear: function() {
+      $('.keymap-key').css('background-image', '');
+    },
     setVideoKey: function($video, key) {
       var _key = key;
       switch (key) {

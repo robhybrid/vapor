@@ -1,8 +1,11 @@
 define(function(require){
   var _ = require('underscore'),
       $ = require('jquery');
+  require('jwerty');
 
-  Screens = [];
+  Screens = {
+    items: []
+  };
 
   // global controls
   jwerty.key('ctrl+s', function() {
@@ -29,7 +32,6 @@ define(function(require){
   }
 
   Screens.add = function(index) {
-
     var screen = {
       $el: $('<div>', {
         'class': 'screen'
@@ -40,19 +42,19 @@ define(function(require){
     // add new screen element to main.
     $('#main').append(screen.$el);
 
-    Screens[index] = screen;
+    Screens.items[index] = screen;
     if ( ! Screens.current) {
       Screens.current = screen;
     }
 
-    return Object.freeze(screen);
+    return screen;
   };
 
   Screens.remove = function(index) {
     if (Screens.length > 1 && typeof index === 'number') {
-      delete Screens(index);
+      delete Screens.items[index];
     }
-    Screens.current = _.last(Screens);
+    Screens.current = _.last(Screens.items);
   }
 
   // initialize

@@ -105,15 +105,14 @@ define(function(require) {
     }
 
     $screen.on('startVideo', function(e, key) {
-      _.each(Screens, function(screen, index){
-        screen.videoKeyMap[key] && play(screen.videoKeyMap[key]);
-      })
-
+      for (var i in Screens.items) {
+        Screens.items[i].videoKeyMap[key] && play(Screens.items[i].videoKeyMap[key]);
+      }
     });
     $screen.on('stopVideo', function(e, key) {
-      _.each(Screens, function(screen){
-        screen.videoKeyMap[key] && stop(screen.videoKeyMap[key]);
-      });
+      for (var i in Screens.items) {
+        Screens.items[i].videoKeyMap[key] && stop(Screens.items[i].videoKeyMap[key]);
+      }
     });
 
     // bind keyboard events

@@ -20,6 +20,7 @@
     "socket.io": "^1.0.6",
     "socket.io-client": "^1.0.6",
     "socketio-jwt": "^2.0.2",
+    "st": "^0.5.2",
     "walk": "^2.3.4"
   },
   "devDependencies": {

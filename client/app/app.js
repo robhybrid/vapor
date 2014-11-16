@@ -248,8 +248,9 @@ define(function(require) {
 
     $('[data-css-property]').on('input', function(e){
       var $slider = $(e.currentTarget),
-        data = $slider.data();
-      Screens.current.$el.css(
+        data = $slider.data(),
+        $el = data.target ? Screens.current.$el.closest(data.target) : Screens.current.$el;
+      $el.css(
         data.cssProperty,
         ((parseInt($slider.val()) + parseInt(data.offset || 0) ) * (data.ratio || 1) ) + (data.unit || ''));
     });

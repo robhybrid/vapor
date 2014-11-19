@@ -16,7 +16,7 @@ Caps-lock to sustain.
 
 Spacebar to blackout.
 
-Command-shift-F to enter full screen.
+Command-Shift-F to enter full screen.
 
 Option-S brings up fade and Video mapping controls.
 

@@ -2,6 +2,7 @@ define(function(require){
   require('jquery-keymap');
   require('jwerty');
   var _ = require('underscore');
+  var Screens = require('Screens');
 
   jwerty.key('option+k', function(){
     $('.keymap').toggleClass('hidden');
@@ -15,16 +16,28 @@ define(function(require){
     $el: $('.keymap').keymap({
       layout: 'mac_laptop'
     }),
-    render: function(videoKeyMap) {
+    render: function(options) {
       keymap.$el.keymap({
         type: 'reset'
       });
-      videoKeyMap.forEach(function($video, key) {
-        // TODO.
+      var videoKeyMap = options.videoKeyMap || {};
+      var banks = options.banks || [];
+      keymap.renderBanks(banks);
+      Object.keys(videoKeyMap).forEach(function(key) {
+        keymap.setVideoKey(videoKeyMap[key], key);
       });
     },
     clear: function() {
-      $('.keymap-key').css('background-image', '');
+      $('.keymap-key').css('background-image', '')
+        .removeClass('populated');
+    },
+    renderBanks: function() {
+      var banks = Screens.current.banks
+      $('.keymap-key').removeClass('populated selected');
+      Object.keys(banks).forEach(function(key) {
+        $('[data-value="' + key + '"]', keymap.$el).addClass('populated');
+      });
+      $('[data-value="' + Screens.current.currentBankIndex + '"]', keymap.$el).addClass('selected');
     },
     setVideoKey: function($video, key) {
       var _key = key;

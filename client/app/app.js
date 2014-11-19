@@ -17,8 +17,17 @@ define(function(require) {
     var socket = io();
     $.ajax({
       url: 'api/files'
-    }).done(function(files){
-      loadVideos(files, videoKeyChars, 0);
+    }).done(function(files) {
+
+      // load up banks
+      files.forEach(function(file, index){
+        if (Screens.current.bank()[videoKeyChars[index % videoKeyChars.length]]) {
+          Screens.current.bank(Screens.current.currentBankIndex + 1);
+        }
+        Screens.current.bank()[videoKeyChars[index % videoKeyChars.length]] = file;
+      });
+
+      loadVideos(Screens.current.bank(0));
 
       // list in file browser
       $('.files').html(function(){
@@ -31,34 +40,38 @@ define(function(require) {
           });
         });
       });
-      $('.file').click(function(e){
+      $('.file').click(function(e) {
         loadVideos(files.slice($(e.currentTarget).index()), videoKeyChars);
       });
     });
 
     bindSpecialKeys();
-    function loadVideos(files, keys) {
+
+    function loadVideos(bank) {
       keymap.clear();
+      keymap.renderBanks();
       $('video', Screens.current.$el).remove();
       $('.video-container', Screens.current.$el).remove();
       //bindSpecialKeys();
       Screens.current.videoKeyMap = {};
 
-      loadVideo(files, keys, 0);
-    };
+      loadVideo(bank, 0);
+    }
 
-    function loadVideo(files, keys, i) {
+    function loadVideo(bank, i) {
       // called recursively
+      var keys = Object.keys(bank),
+        key = keys[i],
+        file = bank[key];
 
-      if ( ! videoKeyChars[i] || ! files[i]) {
+      if ( ! key || ! file) {
         console.log('done loading');
-        //keymap.render(Screens.current.videoKeyMap);
         $('.loader').width(0);
         return;
       }
 
       var $video = $('<video>', {
-        src:  files[i],
+        src:  file,
         loop: 'loop',
         preload: 'auto',
         autoplay: true
@@ -75,32 +88,27 @@ define(function(require) {
       // Once the video is ready to play, stop it and start loading the next one.
       $video.one('canplaythrough', function(e) {
         $(e.currentTarget)[0].pause();
-        loadVideo(files, keys, ++i);
+        loadVideo(bank, ++i);
 
-        var max = Math.min(files.length, keys.length);
         $('.loader').css('width',
-          i == max ?
+          i == keys.length ?
             0 :
-            (i / max * 100) + '%'
+            (i / keys.length * 100) + '%'
         );
       });
 
       // Insert video in dom.
       Screens.current.$el.append(
         $('<div>', {
-            'class': 'video-container off',
-            id: 'vc' + keyPointer
+            'class': 'video-container off'
           }
         ).append($video)
       );
 
       // Map the video onto a key.
-      mapVideo(videoKeyChars[i], $video);
+      mapVideo(key, $video);
       $videos = $('video');
     }
-
-    // TODO: initial Screens and get current;
-    var $screen = $('.screen:last');
 
     function mapVideo(key, video) {
       var $video = $(video);
@@ -108,16 +116,24 @@ define(function(require) {
       keymap.setVideoKey($video, key);
     }
 
-    $screen.on('startVideo', function(e, key) {
+    // Main Controller
+    var $main = $('#main');
+    $main.on('startVideo', function(e, key) {
       for (var i in Screens.items) {
         Screens.items[i].videoKeyMap[key] && play(Screens.items[i].videoKeyMap[key]);
       }
     });
-    $screen.on('stopVideo', function(e, key) {
+    $main.on('stopVideo', function(e, key) {
       for (var i in Screens.items) {
         Screens.items[i].videoKeyMap[key] && stop(Screens.items[i].videoKeyMap[key]);
       }
     });
+    $main.on('changeBank', function(e, key){
+      console.log(Screens.current.bank(key));
+      loadVideos(Screens.current.bank(key));
+    });
+
+
 
     // bind keyboard events
     var keysDown = {};
@@ -125,16 +141,25 @@ define(function(require) {
       jwerty.key(key, function(e){
         if (keysDown[key]) return;
         keysDown[key] = true;
-        $('.screen').trigger('startVideo', key);
+        $main.trigger('startVideo', [key]);
+
         socket.emit('keydown', key);
       });
-      $('html').bind('keyup', jwerty.event(key, function (){
+      $(document).bind('keyup', jwerty.event(key, function (){
         keysDown[key] = false;
         if ( ! capsOn) {
-          $('.screen').trigger('stopVideo', key);
+          $main.trigger('stopVideo', [key]);
           socket.emit('keyup', key);
         }
       }));
+    });
+
+    var bankKeys = '1234567890'.split('');
+    bankKeys.forEach(function(key) {
+      jwerty.key(key, function() {
+        Screens.current.$el.trigger('changeBank', [key]);
+        socket.emit('keydown', key);
+      });
     });
 
     var hide = false;
@@ -263,7 +288,6 @@ define(function(require) {
     // Use websocket to connect to other outs.
 
     socket.on('keydown', function (key) {
-
       $('.screen').trigger('startVideo', [key]);
       specialKeys[key] && specialKeys[key]();
     });
@@ -301,7 +325,7 @@ define(function(require) {
       renderClientList();
     });
 
-    socket.on('transform', function(data){
+    socket.on('transform', function(data) {
       apply3dTransform(data);
     });
   });

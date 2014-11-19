@@ -43,7 +43,15 @@ define(function(require){
       }).append($('<label>', {
           text: index
         })),
-      patches: [],
+      banks: [],
+      currentBankIndex: 0,
+      bank: function(index){
+        if (typeof index === 'number' || ! isNaN(parseInt(index)) ) {
+          screen.currentBankIndex = index;
+        }
+        screen.banks[screen.currentBankIndex] = screen.banks[screen.currentBankIndex] || {};
+        return screen.banks[screen.currentBankIndex];
+      },
       videoKeyMap: {}
     };
     // add new screen element to main.

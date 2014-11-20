@@ -5,10 +5,16 @@ define(function(require) {
   var io = require('socket.io');
   var Screens = require('Screens');
   var keymap = require('keymap');
+  var Autopilot = require('autopilot/Autopilot');
 
   require('capslockstate');
 
   $(function() {
+
+    var pilot = Autopilot({
+      play: play,
+      stop: stop
+    });
 
     // load videos
     var videoKeyChars = ('qwertyuiopasdfghjkl;zxcvbnm'.split('')).concat(['comma','.','forward-slash']);
@@ -71,7 +77,7 @@ define(function(require) {
       }
 
       var $video = $('<video>', {
-        src:  file,
+        src: file,
         loop: 'loop',
         preload: 'auto',
         autoplay: true
@@ -83,6 +89,15 @@ define(function(require) {
         console.error('video error, reloading', arguments);
         var $video = $(e.currentTarget);
         $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString())
+      });
+
+      $video.on('ended', function(){
+        $(this).addClass('ended');
+        console.log('ended');
+      });
+
+      $video.on('waiting', function(){
+        console.log('waiting');
       });
 
       // Once the video is ready to play, stop it and start loading the next one.

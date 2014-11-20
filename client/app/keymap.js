@@ -35,7 +35,9 @@ define(function(require){
       var banks = Screens.current.banks
       $('.keymap-key').removeClass('populated selected');
       Object.keys(banks).forEach(function(key) {
-        $('[data-value="' + key + '"]', keymap.$el).addClass('populated');
+        if (Object.keys(banks[key]).length) {
+          $('[data-value="' + key + '"]', keymap.$el).addClass('populated');
+        }
       });
       $('[data-value="' + Screens.current.currentBankIndex + '"]', keymap.$el).addClass('selected');
     },

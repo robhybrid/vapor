@@ -8,6 +8,8 @@ installation:
 
 put clips in client/assets/video
 
+run `nginx`
+
 run `grunt serve`
 
 mash some keys (starting with 'Q').
@@ -31,3 +33,21 @@ Option-K shows keyboard layout.
 Ctrl-S shows screens.
 
 Ctrl-{number} selects or creates screen.
+
+Install Nginx
+-----------------
+This is optional, but it will greatly improve latency and stability.
+
+`brew install nginx`
+
+- edit `/usr/local/etc/nginx/nginx.conf`
+
+- in nginx.conf change location root to point at clients directory, eg:
+
+        location / {
+                root   /Users/robertwilliams/Sites/vapor/client;
+                index  index.html index.htm;
+        }
+
+- In `server/api/files.js`, uncomment line 35 `staticServer = 'http://' + ip + ':8080/';`
+

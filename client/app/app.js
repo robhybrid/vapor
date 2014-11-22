@@ -39,7 +39,7 @@ define(function(require) {
       // list in file browser
       $('.files .list').html(function(){
         return files.map(function(file){
-          var _filename = file.replace(/^assets\/video\//, '');
+          var _filename = file.replace(/^.*assets\/video\//, '');
           return $('<div>', {
             text: _filename,
             'class': 'file',
@@ -48,7 +48,14 @@ define(function(require) {
         });
       });
       $('.file').click(function(e) {
-        loadVideos(files.slice($(e.currentTarget).index()), videoKeyChars);
+        var theseVideos = files.slice($(e.currentTarget).index());
+        theseVideos.forEach(function(file, index){
+          if (Screens.current.bank()[videoKeyChars[index % videoKeyChars.length]]) {
+            Screens.current.bank(Screens.current.currentBankIndex + 1);
+          }
+          Screens.current.bank()[videoKeyChars[index % videoKeyChars.length]] = file;
+        });
+        loadVideos(Screens.current.bank(0));
       });
     });
 
@@ -89,16 +96,18 @@ define(function(require) {
       $video.on('error', function(e) {
         console.error('video error, reloading', arguments);
         var $video = $(e.currentTarget);
-        $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString())
+        $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString());
       });
 
-      $video.on('ended', function(){
-        $(this).addClass('ended');
+      $video.on('ended', function(e){
+        $(e.currentTarget).addClass('ended');
         console.log('ended');
       });
 
-      $video.on('waiting', function(){
-        console.log('waiting');
+      $video.on('waiting', function(e){
+        console.error('video waiting, reloading', arguments);
+        var $video = $(e.currentTarget);
+        $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString());
       });
 
       // Once the video is ready to play, stop it and start loading the next one.

@@ -34,11 +34,19 @@ Ctrl-S shows screens.
 
 Ctrl-{number} selects or creates screen.
 
+Tapping ~ sets autopilot BPM
+
+Option-~ hide/show BPM
+
+ESC clears BPM
+
 Install Nginx
 -----------------
 This is optional, but it will greatly improve latency and stability.
 
-`brew install nginx`
+`brew tap homebrew/nginx`
+
+`brew install nginx-full --with-mp4 --with-mp4-h264-module --with-gzip-static --with-flv`
 
 - edit `/usr/local/etc/nginx/nginx.conf`
 
@@ -52,3 +60,5 @@ This is optional, but it will greatly improve latency and stability.
 - In `server/api/files.js`, uncomment line 35 `staticServer = 'http://' + ip + ':8080/';`
 
 - `sudo launchctl load -w /Library/LaunchDaemons/org.macports.nginx.plist`
+
+- to stop nginx -s stop

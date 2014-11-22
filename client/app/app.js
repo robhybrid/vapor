@@ -3,7 +3,7 @@ define(function(require) {
   var $ = require('jquery');
   var jwerty = require('jwerty');
   var io = require('socket.io');
-  var Screens = require('Screens');
+  var Screens = require('Screens/Screens');
   var keymap = require('keymap');
   var Autopilot = require('autopilot/Autopilot');
 
@@ -13,7 +13,8 @@ define(function(require) {
 
     var pilot = Autopilot({
       play: play,
-      stop: stop
+      stop: stop,
+      screens: Screens.items
     });
 
     // load videos
@@ -36,7 +37,7 @@ define(function(require) {
       loadVideos(Screens.current.bank(0));
 
       // list in file browser
-      $('.files').html(function(){
+      $('.files .list').html(function(){
         return files.map(function(file){
           var _filename = file.replace(/^assets\/video\//, '');
           return $('<div>', {

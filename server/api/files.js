@@ -32,7 +32,7 @@ router.get('/', function(req, res) {
   walker.on('file', function(root, stat, next) {
 
     var staticServer = '';
-    //staticServer = 'http://' + ip + ':8080/';
+    staticServer = 'http://' + ip + ':8080/';
 
     // Add this file to the list of files
     if (stat.name[0] !== '.') {

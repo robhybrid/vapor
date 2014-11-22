@@ -2,7 +2,7 @@ define(function(require){
   require('jquery-keymap');
   require('jwerty');
   var _ = require('underscore');
-  var Screens = require('Screens');
+  var Screens = require('Screens/Screens');
 
   jwerty.key('option+k', function(){
     $('.keymap').toggleClass('hidden');

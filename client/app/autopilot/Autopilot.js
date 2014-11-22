@@ -21,10 +21,10 @@ define(function(require) {
 
 
     var pilot = {
-      screens: [],
+      screens: config.screens,
       interval: 5000,
       suffle: true,
-      longFormat: true,
+      measure: 1,
       playlist: {}, // object with array for each screen.
       tap: function() {
         var tapTime = new Date().getTime();
@@ -36,65 +36,46 @@ define(function(require) {
           return;
         }
 
-
         if ((interval) > 15000) {
           pilot.clearBmp();
         }
         tapIntervals.push(interval);
-        if (tapIntervals.length > 1) {
+        if (tapIntervals.length) {
           var sum = 0;
           tapIntervals.forEach(function(interval) {
             sum += interval;
           });
           var intervalRate = sum/tapIntervals.length;
-          setInterval(pilot.playNext.bind(pilot), intervalRate);
 
-          //console.log(tapTime, lastTapTime);
           $('.bpm').text(Math.round(60000/intervalRate));
-          // make a little pulses there too.
+          clearInterval(intervalId);
+          intervalId = setInterval(pilot.playNext, intervalRate);
+          pilot.playNext();
         }
-
       },
       clearBmp: function() {
         lastTapTime = undefined;
         tapIntervals = [];
-      },
-      beat: function() {
-
-      },
-      go: function() {
-        // first off, stop all videos except the last one for each screen.
+        $('.bpm').text('');
+        clearInterval(intervalId);
         pilot.screens.forEach(function(screen) {
-          var $videosPlaying = $('video', screen.$el)
-            .filter(function(i,video){
-              return ! video.paused;
-            })
-            .each(function(i, video) {
-              if (i > 0) {
-                pilot.stop($(video));
-              }
-            });
+          screen.$el.trigger('stopVideo', [_.last(played)]);
         });
-
-        pilot.playNext();
-      },
-      stop: function() {
-
       },
       playNext: function() {
-//        if (video.duration > 15000) {
-//          // start from beginning
-//          // and set an event when it ends to playNext
-//        }
+        // TODO: make a little pulsing indicator.
+        var keys = Object.keys(pilot.screens[0].videoKeyMap);
+        var newKey = keys[_.random(0,keys.length-1)];
+        pilot.screens.forEach(function(screen){
+          screen.$el.trigger('stopVideo', [_.last(played)]);
+          screen.$el.trigger('startVideo', [newKey]);
+        });
 
-        if (pilot.longFormat) {
-
-        }
+        played.push(newKey);
       },
       play: config.play,
       stop: config.stop
     };
-    pilot.go();
 
     return pilot;
   }

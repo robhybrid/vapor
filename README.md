@@ -51,3 +51,4 @@ This is optional, but it will greatly improve latency and stability.
 
 - In `server/api/files.js`, uncomment line 35 `staticServer = 'http://' + ip + ':8080/';`
 
+- `sudo launchctl load -w /Library/LaunchDaemons/org.macports.nginx.plist`

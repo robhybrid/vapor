@@ -6,6 +6,7 @@ define(function(require) {
   var Screens = require('Screens/Screens');
   var keymap = require('keymap');
   var Autopilot = require('autopilot/Autopilot');
+  var startTimer;
 
   require('capslockstate');
 
@@ -62,6 +63,8 @@ define(function(require) {
     bindSpecialKeys();
 
     function loadVideos(bank) {
+      startTimer = new Date();
+
       keymap.clear();
       keymap.renderBanks();
       $('video', Screens.current.$el).remove();
@@ -79,7 +82,7 @@ define(function(require) {
         file = bank[key];
 
       if ( ! key || ! file) {
-        console.log('done loading');
+        console.log('done loading', startTimer && 'in ' + (new Date() - startTimer)+'ms' );
         $('.loader').width(0);
         return;
       }
@@ -92,22 +95,19 @@ define(function(require) {
       });
 
       // Reload the video if there's an error.
-      // This is a work-around for intermittent CONTENT LENGTH ERROR
-      $video.on('error', function(e) {
-        console.error('video error, reloading', arguments);
+      // This is a work-around for intermittent net::ERR_CONTENT_LENGTH_MISMATCH
+      $video.on('error ', function(e) {
         var $video = $(e.currentTarget);
+        console.error('video error, reloading', $video[0].networkState);
         $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString());
       });
-
+      $video.on('stalled', function(e) {
+        var $video = $(e.currentTarget);
+        console.error('video stalled', $video[0].networkState);
+      });
       $video.on('ended', function(e){
         $(e.currentTarget).addClass('ended');
         console.log('ended');
-      });
-
-      $video.on('waiting', function(e){
-        console.error('video waiting, reloading', arguments);
-        var $video = $(e.currentTarget);
-        $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString());
       });
 
       // Once the video is ready to play, stop it and start loading the next one.
@@ -188,6 +188,17 @@ define(function(require) {
     });
 
     var hide = false;
+
+    // TODO: fix double declaration.
+    var specialKeys = {
+      'space': function(){
+        // blackout
+        $videos.each(function(i, el){
+          stop($(el));
+        });
+      }
+    };
+
     function bindSpecialKeys() {
       // Hot-keys for interface.
       jwerty.key('option+f', function(){
@@ -207,7 +218,7 @@ define(function(require) {
       });
 
       // These are special keys to transmit.
-      var specialKeys = {
+      specialKeys = {
         'space': function(){
           // blackout
           $videos.each(function(i, el){

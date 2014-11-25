@@ -14,7 +14,11 @@ run `grunt serve`
 
 mash some keys (starting with 'Q').
 
-Caps-lock to sustain.
+Videos are loaded on the 30 row grid from 'Q' to '/'.
+
+1-0 changes banks.
+
+Caps-lock to sustain all videos.
 
 Spacebar to blackout.
 
@@ -55,6 +59,9 @@ This is optional, but it will greatly improve latency and stability.
         location / {
                 root   /Users/robertwilliams/Sites/vapor/client;
                 index  index.html index.htm;
+                mp4;
+                gzip off;
+                gzip_static off;
         }
 
 - In `server/api/files.js`, uncomment line 35 `staticServer = 'http://' + ip + ':8080/';`

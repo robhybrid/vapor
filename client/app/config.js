@@ -32,4 +32,9 @@ require.config({
     'jquery-keymap': '../components/jquery-keymap/keymap'
   }
 });
+
+if (chrome && chrome.storage && chrome.storage.local) {
+  window.localStorage = chrome.storage.local;
+}
+
 require(['./app']);

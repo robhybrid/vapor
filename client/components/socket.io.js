@@ -2314,7 +2314,7 @@ function JSONPPolling (opts) {
 
   // prevent spurious errors from being emitted when the window is unloaded
   if (global.document && global.addEventListener) {
-    global.addEventListener('beforeunload', function () {
+    global.addEventListener((location.protocol == 'chrome-extension:') ? 'suspend' : 'beforeunload', function () {
       if (self.script) self.script.onerror = empty;
     });
   }
@@ -2817,7 +2817,7 @@ if (global.document) {
   if (global.attachEvent) {
     global.attachEvent('onunload', unloadHandler);
   } else if (global.addEventListener) {
-    global.addEventListener('beforeunload', unloadHandler);
+    global.addEventListener((location.protocol == 'chrome-extension:') ? 'suspend' : 'beforeunload', unloadHandler);
   }
 }
 

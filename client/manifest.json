@@ -10,7 +10,8 @@
   },
   "permissions": [
     "identity",
-    "fileSystem"
+    "fileSystem",
+    "storage"
   ],
   "icons": { "128": "favicon.png" }
 }

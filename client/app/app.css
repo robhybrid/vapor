@@ -1,0 +1,184 @@
+/**
+ * App-wide Styles
+ */
+.autopilot {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+}
+.files {
+  overflow: scroll;
+}
+.files .file {
+  display: block;
+  cursor: pointer;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.files .file:before {
+  content: '⎘';
+  font-size: 1.5em;
+  margin: 1em;
+  color: rgba(255, 255, 255, 0.2);
+}
+.files .file:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.files .file:hover:before {
+  color: #fff;
+}
+.loader {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.keymap-key {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5em;
+  font-size: 2em;
+  text-shadow: 0 0 0.5em #000;
+}
+.keymap-key.populated {
+  background: rgba(255, 255, 255, 0.3);
+}
+.keymap-key.selected {
+  border-color: rgba(255, 255, 255, 0.5);
+  border-width: 2px;
+}
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: #fff;
+  height: 100%;
+  width: 100%;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+div#main {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+video {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  -webkit-transform-origin-x: 50%;
+  -webkit-transform-origin-y: 50%;
+}
+.video-container {
+  height: 100%;
+  opacity: 1;
+  position: absolute;
+  width: 100%;
+  top: 0;
+}
+.video-container.off {
+  opacity: 0;
+}
+#main {
+  -webkit-perspective: 500;
+  perspective: 500;
+  cursor: none;
+}
+.adjustments label {
+  display: inline-block;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  position: relative;
+  bottom: 50%;
+  white-space: nowrap;
+  width: 2em;
+}
+.adjustments input[type=range] {
+  -webkit-appearance: slider-vertical;
+  /* WebKit */
+  width: 8px;
+  height: 100%;
+  padding: 0;
+}
+.controller {
+  position: absolute;
+  top: 10%;
+  z-index: 1;
+  cursor: default;
+  height: 80%;
+  width: 100%;
+}
+.hidden {
+  display: none;
+}
+.clients:before {
+  content: 'clients';
+  vertical-align: top;
+}
+.clients .client {
+  margin: 2em;
+  display: inline-block;
+  height: 5em;
+  width: 8em;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  text-align: center;
+  overflow: hidden;
+}
+.clients .client.selected {
+  border-color: rgba(255, 255, 255, 0.8);
+}
+.screen {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+}
+.screen label {
+  color: #000;
+  text-align: center;
+  display: none;
+  position: absolute;
+  font-size: 20em;
+  opacity: 0.6;
+  top: 50%;
+  line-height: 0;
+  width: 100%;
+}
+.show-screens .screen {
+  background: rgba(255, 255, 255, 0.8);
+}
+.show-screens .screen.selected {
+  box-sizing: border-box;
+  border: 1em solid #fff;
+  background: rgba(255, 255, 255, 0.4);
+}
+.show-screens .screen.selected label {
+  color: #fff;
+  opacity: 1;
+}
+.show-screens .screen label {
+  display: block;
+}

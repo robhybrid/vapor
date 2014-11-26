@@ -25,7 +25,7 @@ require.config({
   paths: {
     jquery: '../bower_components/jquery/dist/jquery',
     '$': '../bower_components/jquery/dist/jquery',
-    "socket.io": '/socket.io/socket.io',
+    "socket.io": '../components/socket.io',
     jwerty: '../bower_components/jwerty/jwerty',
     underscore: '../bower_components/lodash/dist/lodash',
     capslockstate: '../components/jquery.capslockstate',

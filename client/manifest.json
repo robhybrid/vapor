@@ -1,0 +1,16 @@
+{
+  "name": "vapor",
+  "description": "distributed vj app",
+  "version": "0.0",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["app/background.js"]
+    }
+  },
+  "permissions": [
+    "identity",
+    "fileSystem"
+  ],
+  "icons": { "128": "favicon.png" }
+}

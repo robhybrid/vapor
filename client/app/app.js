@@ -21,10 +21,10 @@ define(function(require) {
     // load videos
     var videoKeyChars = ('qwertyuiopasdfghjkl;zxcvbnm'.split('')).concat(['comma','.','forward-slash']);
     var $videos = $('video');
-    var keyPointer = 0;
-    var socket = io();
+    var host = (location.protocol == 'chrome-extension:') ? 'http://localhost:9000/' : '';
+    var socket = io(host);
     $.ajax({
-      url: 'api/files'
+      url: host + 'api/files'
     }).done(function(files) {
 
       // load up banks
@@ -91,7 +91,8 @@ define(function(require) {
         src: file,
         loop: 'loop',
         preload: 'auto',
-        autoplay: true
+        autoplay: true,
+        muted: false
       });
 
       // Reload the video if there's an error.

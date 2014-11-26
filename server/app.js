@@ -12,6 +12,18 @@ var express = require('express');
 var config = require('./config/environment');
 var http = require('http');
 
+var polo = require('polo');
+var apps = polo();
+
+apps.put({
+  name:'vapor', // required - the name of the service
+//  host:'example.com', // defaults to the network ip of the machine
+  port: 9000          // we are listening on port 8080.
+});
+apps.once('up', function(name, service) {                   // up fires everytime some service joins
+  console.log(apps.get(name));                        // should print out the joining service, e.g. hello-world
+});
+
 var max = 100;
 if(http.globalAgent.maxSockets < max) {
   http.globalAgent.maxSockets = max;

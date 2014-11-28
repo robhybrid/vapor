@@ -10,6 +10,14 @@ define(function(require) {
     jwerty.key('esc', function() {
       pilot.clearBmp();
     });
+
+//    $('#main').on('click', function(){
+//      pilot.tap();
+//    });
+//    $('.bpm').click(function(){
+//      pilot.clearBmp();
+//    });
+
     jwerty.key('option+`', function(){
       $('.autopilot').toggleClass('hidden');
     });

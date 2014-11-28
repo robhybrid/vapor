@@ -21,7 +21,8 @@ define(function(require) {
     // load videos
     var videoKeyChars = ('qwertyuiopasdfghjkl;zxcvbnm'.split('')).concat(['comma','.','forward-slash']);
     var $videos = $('video');
-    var host = (location.protocol == 'chrome-extension:') ? 'http://localhost:9000/' : '';
+    // SET YOUR IP HERE
+    var host = (location.protocol == 'chrome-extension:') ? 'http://192.168.1.115:9000/' : '';
     var socket = io(host);
     $.ajax({
       url: host + 'api/files'
@@ -84,6 +85,7 @@ define(function(require) {
       if ( ! key || ! file) {
         console.log('done loading', startTimer && 'in ' + (new Date() - startTimer)+'ms' );
         $('.loader').width(0);
+        manualLoad($('video:not(.played)'));
         return;
       }
 
@@ -91,8 +93,8 @@ define(function(require) {
         src: file,
         loop: 'loop',
         preload: 'auto',
-        autoplay: true,
-        muted: false
+        autoplay: 'autoplay',
+        muted: 'muted'
       });
 
       // Reload the video if there's an error.
@@ -106,9 +108,10 @@ define(function(require) {
         var $video = $(e.currentTarget);
         console.error('video stalled', $video[0].networkState);
       });
-      $video.on('ended', function(e){
-        $(e.currentTarget).addClass('ended');
-        console.log('ended');
+
+      // needed to detect autoplay.
+      $video.on('playing', function(e){
+        $(e.currentTarget).addClass('played');
       });
 
       // Once the video is ready to play, stop it and start loading the next one.
@@ -130,6 +133,7 @@ define(function(require) {
           }
         ).append($video)
       );
+      $video[0].load();
 
       // Map the video onto a key.
       mapVideo(key, $video);
@@ -155,7 +159,6 @@ define(function(require) {
       }
     });
     $main.on('changeBank', function(e, key){
-      console.log(Screens.current.bank(key));
       loadVideos(Screens.current.bank(key));
     });
 
@@ -365,5 +368,29 @@ define(function(require) {
     socket.on('transform', function(data) {
       apply3dTransform(data);
     });
+
+    // hack to load videos on mobile
+    function manualLoad($videos) {
+      console.log($videos.length);
+      if ($videos.length) {
+        var $btn = $('.manual-load').on('click', function(){
+          $videos.each(function(i, video){
+            $(video).one('playing', function(){
+              video.pause();
+              console.log(i + ' played');
+              $(video).addClass('played');
+              var count = $('video:not(.played)').length;
+              if (count) {
+                $('.count', $btn).text(count);
+              } else {
+                $btn.addClass('hidden');
+              }
+            });
+            video.play();
+          });
+        })
+          .removeClass('hidden');
+      }
+    }
   });
 });

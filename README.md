@@ -44,6 +44,8 @@ Option-~ hide/show BPM
 
 ESC clears BPM
 
+Option-M toggle mute (on by default).
+
 Install Nginx
 -----------------
 This is optional, but it will greatly improve latency and stability.

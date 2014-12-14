@@ -8,6 +8,11 @@ define(function(require) {
   var Autopilot = require('autopilot/Autopilot');
   var startTimer;
 
+  if (location.protocol == 'chrome-extension:') {
+    var TL = require('./chromeApp/Transloader');
+    var transLoader = TL();
+  }
+
   require('capslockstate');
 
   $(function() {
@@ -18,6 +23,8 @@ define(function(require) {
       screens: Screens.items
     });
 
+    var mute = true;
+
     // load videos
     var videoKeyChars = ('qwertyuiopasdfghjkl;zxcvbnm'.split('')).concat(['comma','.','forward-slash']);
     var $videos = $('video');
@@ -27,6 +34,10 @@ define(function(require) {
     $.ajax({
       url: host + 'api/files'
     }).done(function(files) {
+
+      if (typeof transLoader !== 'undefined') {
+        transLoader.files = files;
+      }
 
       // load up banks
       files.forEach(function(file, index){
@@ -68,7 +79,10 @@ define(function(require) {
 
       keymap.clear();
       keymap.renderBanks();
-      $('video', Screens.current.$el).remove();
+      $('video', Screens.current.$el).each(function(){
+        this.pause();
+        delete(this);
+      }).remove();
       $('.video-container', Screens.current.$el).remove();
       //bindSpecialKeys();
       Screens.current.videoKeyMap = {};
@@ -89,13 +103,20 @@ define(function(require) {
         return;
       }
 
-      var $video = $('<video>', {
-        src: file,
-        loop: 'loop',
-        preload: 'auto',
-        autoplay: 'autoplay',
-        muted: 'muted'
-      });
+      var $video,
+        videoConfig = {
+          loop: 'loop',
+          preload: 'auto',
+          autoplay: 'autoplay'
+        };
+
+
+      $video = $('<video>', {src: file});
+
+      $video.attr(videoConfig);
+      if (mute) {
+        $video.attr({muted:'muted'});
+      }
 
       // Reload the video if there's an error.
       // This is a work-around for intermittent net::ERR_CONTENT_LENGTH_MISMATCH
@@ -219,6 +240,14 @@ define(function(require) {
       });
       jwerty.key('option+c', function() {
         $('.clients').toggleClass('hidden');
+      });
+      jwerty.key('option+m', function(){
+        mute = ! mute;
+        if (mute) {
+          $('video').attr('muted', 'muted');
+        } else {
+          $('video').removeAttr('muted');
+        }
       });
 
       // These are special keys to transmit.

@@ -10,13 +10,13 @@
   },
   "permissions": [
     "identity",
-    "storage",
     "fileSystem",
-    "fileSystem.directory",
-    "fileSystem.write",
-    "fileSystem.retainEntries",
+    "storage",
     "http://192.168.1.115:8080/",
     "http://192.168.1.115:8080/*"
   ],
-  "icons": { "128": "favicon.png" }
+  "icons": { "128": "favicon.png" },
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "landscape"
 }

@@ -35,9 +35,6 @@ require.config({
 
 if (window.chrome && chrome.storage && chrome.storage.local) {
   window.localStorage = chrome.storage.local;
-  if (location.protocol == 'chrome-extension:') {
-    var Transloader = require(['./chromeApp/Transloader']);
-  }
 }
 
 require(['./app']);

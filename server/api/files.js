@@ -40,7 +40,8 @@ router.get('/', function(req, res) {
 
       // generate a thumbnail.
       fs.exists('client/assets/images/thumbs/' + stat.name + '/tn.png', function(exists){
-        if (! exists) {
+        if (! exists && stat.name.match(/\.(mpg|mp4|m4v)$/)) {
+          console.log('generating thumbnail: ', stat.name);
           var proc = new ffmpeg(path.join(root, stat.name))
             .screenshots({
               count: 1,
@@ -48,7 +49,7 @@ router.get('/', function(req, res) {
               timemarks: [ '33%' ]
             }, 'client/assets/images/thumbs/' + stat.name, function(err) {
               if (err) {
-                console.error(err);
+                console.error('error generating thumbnail', err);
               }
             });
         }

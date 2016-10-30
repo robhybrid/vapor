@@ -8,7 +8,7 @@ installation:
 
 put clips in client/assets/video
 
-run `nginx`
+run `nginx` (if configured)
 
 run `grunt serve`
 
@@ -28,7 +28,7 @@ Option-S brings up fade and Video mapping controls.
 
 Option-C brings up clients.
 
-Use Ctrl-H to not play video on current screen, useful speeding up playback when using 2-screen mode.
+Use Ctrl-H to not play video on current screen, useful speeding up playback when using 2 or more screens.
 
 Option-F for File browser.
 
@@ -70,4 +70,4 @@ This is optional, but it will greatly improve latency and stability.
 
 - `sudo launchctl load -w /Library/LaunchDaemons/org.macports.nginx.plist`
 
-- to stop nginx -s stop
+- to stop `nginx -s stop`

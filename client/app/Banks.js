@@ -3,9 +3,8 @@ define(function(require) {
     var config = {
       videoKeyChars: _config.videoKeyChars
     };
-    c
     var bank = {
-      keys: function(newKeys){
+      keys: function(newKeys) {
       }
     };
 

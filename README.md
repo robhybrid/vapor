@@ -1,4 +1,6 @@
-installation:
+#vapor
+
+##installation:
 
 `npm install`
 
@@ -8,10 +10,13 @@ installation:
 
 put clips in client/assets/video
 
+##run
+
 run `nginx` (if configured)
 
 run `grunt serve`
 
+##operation
 mash some keys (starting with 'Q').
 
 Videos are loaded on the 30 row grid from 'Q' to '/'.
@@ -46,8 +51,8 @@ ESC clears BPM
 
 Option-M toggle mute (on by default).
 
-Install Nginx
------------------
+##install nginx
+
 This is optional, but it will greatly improve latency and stability.
 
 `brew tap homebrew/nginx`
@@ -71,3 +76,9 @@ This is optional, but it will greatly improve latency and stability.
 - `sudo launchctl load -w /Library/LaunchDaemons/org.macports.nginx.plist`
 
 - to stop `nginx -s stop`
+
+### TODOS:
+
+* make all sliders work across websockets.
+* fix muting bug
+* implement Screes/matrixTransform

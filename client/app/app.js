@@ -1,3 +1,7 @@
+// This is the main portion of the app. Sorry it's not well broken out.
+// This file handles loading video, socket connections and most of the keymapping.
+
+
 define(function(require) {
 
   var $ = require('jquery');
@@ -7,6 +11,10 @@ define(function(require) {
   var keymap = require('keymap');
   var Autopilot = require('autopilot/Autopilot');
   var startTimer;
+  var loading = false;
+  var sliders = require('./sliders');
+
+  var networkStates = ['NETWORK_EMPTY', 'NETWORK_IDLE', 'NETWORK_LOADING', 'NETWORK_NO_SOURCE'];
 
   if (location.protocol == 'chrome-extension:') {
     var TL = require('./chromeApp/Transloader');
@@ -28,6 +36,7 @@ define(function(require) {
     // load videos
     var videoKeyChars = ('qwertyuiopasdfghjkl;zxcvbnm'.split('')).concat(['comma','.','forward-slash']);
     var $videos = $('video');
+
     // SET YOUR IP HERE
     var host = (location.protocol == 'chrome-extension:') ? 'http://192.168.1.115:9000/' : '';
     var socket = io(host);
@@ -84,20 +93,20 @@ define(function(require) {
         delete(this);
       }).remove();
       $('.video-container', Screens.current.$el).remove();
-      //bindSpecialKeys();
       Screens.current.videoKeyMap = {};
 
       loadVideo(bank, 0);
     }
 
+    // tThis function recursively loads videos one at a time.
     function loadVideo(bank, i) {
-      // called recursively
       var keys = Object.keys(bank),
         key = keys[i],
         file = bank[key];
 
       if ( ! key || ! file) {
         console.log('done loading', startTimer && 'in ' + (new Date() - startTimer)+'ms' );
+        loading = false;
         $('.loader').width(0);
         manualLoad($('video:not(.played)'));
         return;
@@ -122,12 +131,15 @@ define(function(require) {
       // This is a work-around for intermittent net::ERR_CONTENT_LENGTH_MISMATCH
       $video.on('error ', function(e) {
         var $video = $(e.currentTarget);
-        console.error('video error, reloading', $video[0].networkState);
+        console.error('video error, reloading', networkStates[$video[0].networkState]);
         $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString());
       });
       $video.on('stalled', function(e) {
         var $video = $(e.currentTarget);
-        console.error('video stalled', $video[0].networkState);
+        console.warn('video stalled', networkStates[$video[0].networkState]);
+        if (loading) {
+          blackout();
+        }
       });
 
       // needed to detect autoplay.
@@ -204,9 +216,9 @@ define(function(require) {
       }));
     });
 
-    var bankKeys = '1234567890'.split('');
-    bankKeys.forEach(function(key) {
-      jwerty.key(key, function() {
+    var numbers = '1234567890'.split('');
+    numbers.forEach(function(key) {
+      jwerty.key('option+' + key, function() {
         Screens.current.$el.trigger('changeBank', [key]);
         socket.emit('keydown', key);
       });
@@ -217,12 +229,15 @@ define(function(require) {
     // TODO: fix double declaration.
     var specialKeys = {
       'space': function(){
-        // blackout
-        $videos.each(function(i, el){
-          stop($(el));
-        });
+        blackout();
       }
     };
+
+    function blackout() {
+      $videos.each(function(i, el){
+        stop($(el));
+      });
+    }
 
     function bindSpecialKeys() {
       // Hot-keys for interface.
@@ -253,10 +268,7 @@ define(function(require) {
       // These are special keys to transmit.
       specialKeys = {
         'space': function(){
-          // blackout
-          $videos.each(function(i, el){
-            stop($(el));
-          });
+          blackout();
         }
       };
       $.each(specialKeys, function(key, action) {
@@ -300,29 +312,23 @@ define(function(require) {
     $(window).capslockstate();
 
 
-    // sliders.
-    $('.fade-duration').on('input', function(e){
-      $('#fade-duration').html('.video-container { transition: opacity ' + $(e.currentTarget).val() +'ms; }')
+
+    // Use websocket to connect to other outs.
+
+    socket.on('keydown', function (key) {
+      $('.screen').trigger('startVideo', [key]);
+      specialKeys[key] && specialKeys[key]();
     });
-    var transform = {};
-    var translate = [0,0,0];
-    $('[data-transform]').each(function(i, el){
-      var $slider = $(el),
-        method = $slider.data('transform'),
-        unit = $slider.data('unit');
-      $slider.on('input', function(e) {
-        transform[method] = $(e.currentTarget).val() + unit;
-        apply3dTransform();
-      });
+    socket.on('keyup', function (key) {
+      $('.screen').trigger('stopVideo', [key]);
     });
 
-    $('[data-translate]').on('input', function(e){
-      var $slider = $(e.currentTarget),
-        data = $slider.data();
-      translate[parseInt(data.translate)] = $slider.val() + data.unit;
-      // it client == self
-      apply3dTransform();
-    });
+    // client selector
+    var client = 'self',
+      clients = {};
+
+    sliders.init({apply3dTransform: apply3dTransform});
+
     function apply3dTransform(data) {
       if (data) {
         translate = data.translate;
@@ -343,31 +349,6 @@ define(function(require) {
         }));
       }
     }
-
-    $('[data-css-property]').on('input', function(e){
-      var $slider = $(e.currentTarget),
-        data = $slider.data(),
-        $el = data.target ? Screens.current.$el.closest(data.target) : Screens.current.$el;
-      $el.css(
-        data.cssProperty,
-        ((parseInt($slider.val()) + parseInt(data.offset || 0) ) * (data.ratio || 1) ) + (data.unit || ''));
-    });
-
-
-    // Use websocket to connect to other outs.
-
-    socket.on('keydown', function (key) {
-      $('.screen').trigger('startVideo', [key]);
-      specialKeys[key] && specialKeys[key]();
-    });
-    socket.on('keyup', function (key) {
-      $('.screen').trigger('stopVideo', [key]);
-    });
-
-    // client selector
-    var client = 'self',
-      clients = {};
-
 
     function renderClientList() {
       var $clients = $('.clients').html('');

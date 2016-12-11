@@ -327,12 +327,18 @@ define(function(require) {
     var client = 'self',
       clients = {};
 
-    sliders.init({apply3dTransform: apply3dTransform});
+    sliders.init({
+      apply3dTransform: apply3dTransform,
+      socket: socket
+    });
 
     function apply3dTransform(data) {
       if (data) {
         translate = data.translate;
         transform = data.transform;
+      } else {
+        transform = sliders.transform;
+        translate = sliders.translate;
       }
       if ( data && data.client || client == 'self' ) {
         Screens.current.$el.css('transform',
@@ -373,6 +379,9 @@ define(function(require) {
         client = 'self';
       }
       renderClientList();
+    });
+    socket.on('fadeDuration', function (val) {
+      $('#fade-duration').html('.video-container { transition: opacity ' + val +'ms; }');
     });
 
     socket.on('transform', function(data) {

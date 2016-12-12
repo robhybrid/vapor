@@ -8,8 +8,8 @@ define(function(require) {
   var jwerty = require('jwerty');
   var io = require('socket.io');
   var Screens = require('Screens/Screens');
-  var keymap = require('keymap');
-  var Autopilot = require('autopilot/Autopilot');
+  var keymap = require('./keymap');
+  var Autopilot = require('./autopilot/Autopilot');
   var startTimer;
   var loading = false;
   var sliders = require('./sliders');
@@ -119,7 +119,6 @@ define(function(require) {
           autoplay: 'autoplay'
         };
 
-
       $video = $('<video>', {src: file});
 
       $video.attr(videoConfig);
@@ -224,6 +223,29 @@ define(function(require) {
       });
     });
 
+    // preview bank
+    numbers.forEach(function(key) {
+
+      jwerty.key(key, function previewBank() {
+        if (keysDown[key]) return;
+        keysDown[key] = true;
+        keymap.clear();
+        keymap.renderBanks();
+        var bank = Screens.current.banks[key];
+        _.each(bank, function(filename, key) {
+          keymap.setVideoKey(filename, key);
+        });
+      });
+      // change back to current bank on keyup.
+      $(document).bind('keyup', jwerty.event(key, function (){
+        keysDown[key] = false;
+        _.each(Screens.current.bank(), function(filename, key) {
+          keymap.setVideoKey(filename, key);
+        });
+      }));
+    });
+
+
     var hide = false;
 
     // TODO: fix double declaration.
@@ -241,22 +263,22 @@ define(function(require) {
 
     function bindSpecialKeys() {
       // Hot-keys for interface.
-      jwerty.key('option+f', function(){
+      jwerty.key('option+f', function(){  // files
         $('.files').toggleClass('hidden');
       });
-      jwerty.key('option+s', function(){
+      jwerty.key('option+s', function(){  // sliders
         $('.adjustments').toggleClass('hidden');
       });
-      jwerty.key('ctrl+H', function(){
+      jwerty.key('ctrl+H', function(){    // hide
         $videos.each(function(i, el){
           stop($(el));
         });
         hide = ! hide;
       });
-      jwerty.key('option+c', function() {
+      jwerty.key('option+c', function() {  // clients
         $('.clients').toggleClass('hidden');
       });
-      jwerty.key('option+m', function(){
+      jwerty.key('option+m', function() {  // mute
         mute = ! mute;
         if (mute) {
           $('video').attr('muted', 'muted');
@@ -390,13 +412,11 @@ define(function(require) {
 
     // hack to load videos on mobile
     function manualLoad($videos) {
-      console.log($videos.length);
       if ($videos.length) {
         var $btn = $('.manual-load').on('click', function(){
           $videos.each(function(i, video){
             $(video).one('playing', function(){
               video.pause();
-              console.log(i + ' played');
               $(video).addClass('played');
               var count = $('video:not(.played)').length;
               if (count) {

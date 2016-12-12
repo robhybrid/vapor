@@ -4,18 +4,16 @@ define(function(require){
   var _ = require('underscore');
   var Screens = require('Screens/Screens');
 
-  jwerty.key('option+k', function(){
-    $('.keymap').toggleClass('hidden');
-  });
-
   var $keymap = $('.keymap').keymap({
     layout: 'mac_laptop'
   });
 
+  jwerty.key('option+k', function(){
+    $keymap.toggleClass('hidden');
+  });
+
   var keymap = {
-    $el: $('.keymap').keymap({
-      layout: 'mac_laptop'
-    }),
+    $el: $keymap,
     render: function(options) {
       keymap.$el.keymap({
         type: 'reset'
@@ -42,6 +40,7 @@ define(function(require){
       $('[data-value="' + Screens.current.currentBankIndex + '"]', keymap.$el).addClass('selected');
     },
     setVideoKey: function($video, key) {
+      var url = typeof $video === 'string' ? $video : $video.attr('src');
       var _key = key;
       switch (key) {
         case 'comma':
@@ -53,7 +52,7 @@ define(function(require){
       };
       $('[data-value="' + _key + '"]', keymap.$el)
         .css('background-image', 'url("/assets/images/thumbs/' +
-          encodeURI(_.last($video.attr('src').split('/')))
+          encodeURI(_.last(url.split('/')))
           + '/tn.png")');
     }
   };

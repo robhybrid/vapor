@@ -16,12 +16,16 @@ run `nginx` (if configured)
 
 run `grunt serve`
 
-##operation
+## controls
 mash some keys (starting with 'Q').
 
 Videos are loaded on the 30 row grid from 'Q' to '/'.
 
-1-0 changes banks.
+Option-K shows keyboard layout.
+
+number keys preview banks. (when viewing the keyboard layout.
+
+option-[number] selects bank.
 
 Caps-lock to sustain all videos.
 
@@ -36,8 +40,6 @@ Option-C brings up clients.
 Use Ctrl-H to not play video on current screen, useful speeding up playback when using 2 or more screens.
 
 Option-F for File browser.
-
-Option-K shows keyboard layout.
 
 Ctrl-S shows screens.
 
@@ -79,7 +81,6 @@ This is optional, but it will greatly improve latency and stability.
 
 ### TODOS:
 
-* make all sliders work across websockets.
 * don't load videos in Hide mode.
-* fix muting bug
 * implement Screes/matrixTransform
+* make all sliders work across websockets.

@@ -42,7 +42,8 @@ define(function(require) {
     var socket = io(host);
     $.ajax({
       url: host + 'api/files'
-    }).done(function(files) {
+    }).done(
+      function(files) {
 
       if (typeof transLoader !== 'undefined') {
         transLoader.files = files;
@@ -292,7 +293,6 @@ define(function(require) {
           $('video').removeAttr('muted');
         }
       });
-      bindSpecialKeys();
 
       // These are special keys to transmit.
       var specialKeys = {
@@ -307,6 +307,7 @@ define(function(require) {
         });
       });
     }
+    bindSpecialKeys();
 
 
     var $lastVideo = $('video:last');

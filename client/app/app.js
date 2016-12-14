@@ -81,9 +81,8 @@ define(function(require) {
       });
     });
 
-    bindSpecialKeys();
-
     function loadVideos(bank) {
+      if (hide) return;
       startTimer = new Date();
 
       keymap.clear();
@@ -100,6 +99,7 @@ define(function(require) {
 
     // tThis function recursively loads videos one at a time.
     function loadVideo(bank, i) {
+      if (hide) return;
       var keys = Object.keys(bank),
         key = keys[i],
         file = bank[key];
@@ -215,13 +215,26 @@ define(function(require) {
       }));
     });
 
+    var specialKeys = {
+      'space': function(){
+        blackout();
+      }
+    };
+
     var numbers = '1234567890'.split('');
-    numbers.forEach(function(key) {
-      jwerty.key('option+' + key, function() {
-        Screens.current.$el.trigger('changeBank', [key]);
-        socket.emit('keydown', key);
+    numbers.forEach(function(bankNumber) {
+      var keyCombo = 'option+' + bankNumber;
+      jwerty.key(keyCombo, function() {
+        changeBank(bankNumber);
+        socket.emit('keydown', keyCombo);
       });
+      specialKeys[keyCombo] = function(bankNumber) {
+        changeBank(bankNumber);
+      }
     });
+    function changeBank(bankNumber) {
+      Screens.current.$el.trigger('changeBank', [bankNumber]);
+    }
 
     // preview bank
     numbers.forEach(function(key) {
@@ -247,13 +260,6 @@ define(function(require) {
 
 
     var hide = false;
-
-    // TODO: fix double declaration.
-    var specialKeys = {
-      'space': function(){
-        blackout();
-      }
-    };
 
     function blackout() {
       $videos.each(function(i, el){
@@ -286,9 +292,10 @@ define(function(require) {
           $('video').removeAttr('muted');
         }
       });
+      bindSpecialKeys();
 
       // These are special keys to transmit.
-      specialKeys = {
+      var specialKeys = {
         'space': function(){
           blackout();
         }

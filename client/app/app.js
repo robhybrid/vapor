@@ -1,3 +1,5 @@
+'use strict';
+
 // This is the main portion of the app. Sorry it's not well broken out.
 // This file handles loading video, socket connections and most of the keymapping.
 
@@ -98,7 +100,7 @@ define(function(require) {
       loadVideo(bank, 0);
     }
 
-    // tThis function recursively loads videos one at a time.
+    // This function recursively loads videos one at a time.
     function loadVideo(bank, i) {
       if (hide) return;
       var keys = Object.keys(bank),
@@ -113,70 +115,94 @@ define(function(require) {
         return;
       }
 
-      var $video,
-        videoConfig = {
-          loop: 'loop',
-          preload: 'auto',
-          autoplay: 'autoplay'
-        };
+      if (file.match(/\.(m4v|mov|webm|mp4)$/i)) {
+        var $video,
+          videoConfig = {
+            loop: 'loop',
+            preload: 'auto',
+            autoplay: 'autoplay'
+          };
 
-      $video = $('<video>', {src: file});
+        $video = $('<video>', {src: file});
 
-      $video.attr(videoConfig);
-      if (mute) {
-        $video.attr({muted:'muted'});
-      }
-
-      // Reload the video if there's an error.
-      // This is a work-around for intermittent net::ERR_CONTENT_LENGTH_MISMATCH
-      $video.on('error ', function(e) {
-        var $video = $(e.currentTarget);
-        console.error('video error, reloading', networkStates[$video[0].networkState]);
-        $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString());
-      });
-      $video.on('stalled', function(e) {
-        var $video = $(e.currentTarget);
-        console.warn('video stalled', networkStates[$video[0].networkState]);
-        if (loading) {
-          blackout();
+        $video.attr(videoConfig);
+        if (mute) {
+          $video.attr({muted:'muted'});
         }
-      });
 
-      // needed to detect autoplay.
-      $video.on('playing', function(e){
-        $(e.currentTarget).addClass('played');
-      });
+        // Reload the video if there's an error.
+        // This is a work-around for intermittent net::ERR_CONTENT_LENGTH_MISMATCH
+        $video.on('error ', function(e) {
+          var $video = $(e.currentTarget);
+          console.error('video error, reloading', networkStates[$video[0].networkState]);
+          $video.attr('src', $video.attr('src').split('?')[0] + '?' + ((new Date())).toISOString());
+        });
+        $video.on('stalled', function(e) {
+          var $video = $(e.currentTarget);
+          console.warn('video stalled', networkStates[$video[0].networkState]);
+          if (loading) {
+            blackout();
+          }
+        });
 
-      // Once the video is ready to play, stop it and start loading the next one.
-      $video.one('canplaythrough', function(e) {
-        $(e.currentTarget)[0].pause();
+        // needed to detect autoplay.
+        $video.on('playing', function(e){
+          $(e.currentTarget).addClass('played');
+        });
+
+        // Once the video is ready to play, stop it and start loading the next one.
+        $video.one('canplaythrough', function(e) {
+          $(e.currentTarget)[0].pause();
+          loadVideo(bank, ++i);
+          $('.loader').css('width',
+            i == keys.length ?
+              0 :
+            (i / keys.length * 100) + '%'
+          );
+        });
+
+        // Insert video in dom.
+        Screens.current.$el.append(
+          $('<div>', {
+              'class': 'video-container off'
+            }
+          ).append($video)
+        );
+        $video[0].load();
+
+        // Map the video onto a key.
+        mapVideo(key, $video);
+        $videos = $('video');
+      } else if (file.match(/\.(gif)$/i)) {
+        var $img = $('<img>', {src: file})
+        mapImage(key, $img);
         loadVideo(bank, ++i);
-
         $('.loader').css('width',
           i == keys.length ?
             0 :
-            (i / keys.length * 100) + '%'
+          (i / keys.length * 100) + '%'
         );
-      });
-
-      // Insert video in dom.
-      Screens.current.$el.append(
-        $('<div>', {
-            'class': 'video-container off'
-          }
-        ).append($video)
-      );
-      $video[0].load();
-
-      // Map the video onto a key.
-      mapVideo(key, $video);
-      $videos = $('video');
+        // Insert video in dom.
+        Screens.current.$el.append(
+          $('<div>', {
+              'class': 'video-container off'
+            }
+          ).append($img)
+        );
+      } else {
+        console.error('bad format', file);
+        loadVideo(bank, ++i);
+      }
     }
-
     function mapVideo(key, video) {
       var $video = $(video);
       Screens.current.videoKeyMap[key] = $video;
       keymap.setVideoKey($video, key);
+    }
+
+    function mapImage(key, $img) {
+      Screens.current.videoKeyMap[key] = $img;
+      keymap.setVideoKey($img, key);
     }
 
     // Main Controller
@@ -318,7 +344,7 @@ define(function(require) {
         $container.parent().append($container);
         $container.css('opacity');
       }
-      $video[0].play();
+      $video[0].play && $video[0].play();
       $container.removeClass('off');
       $video.css({
         top: ($container.height() - $video.height()) /2
@@ -327,7 +353,7 @@ define(function(require) {
     }
 
     function stop($video) {
-      $video[0].pause();
+      $video[0].pause && $video[0].pause();
       $video.parent().addClass('off');
     }
 
@@ -362,6 +388,7 @@ define(function(require) {
       socket: socket
     });
 
+    var translate, transform;
     function apply3dTransform(data) {
       if (data) {
         translate = data.translate;
@@ -424,7 +451,7 @@ define(function(require) {
         var $btn = $('.manual-load').on('click', function(){
           $videos.each(function(i, video){
             $(video).one('playing', function(){
-              video.pause();
+              video.pause && video.pause();
               $(video).addClass('played');
               var count = $('video:not(.played)').length;
               if (count) {
@@ -433,7 +460,7 @@ define(function(require) {
                 $btn.addClass('hidden');
               }
             });
-            video.play();
+            video.play && video.play();
           });
         })
           .removeClass('hidden');

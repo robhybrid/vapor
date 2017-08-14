@@ -1,9 +1,12 @@
+'use strict';
+
 define(function(require){
   var _ = require('underscore'),
       $ = require('jquery');
-  require('jwerty');
+  var jwerty = require('jwerty');
+  var matrixTransform = require('./matrixTransform');
 
-  Screens = {
+  var Screens = {
     items: []
   };
 
@@ -61,6 +64,8 @@ define(function(require){
     if ( ! Screens.current) {
       Screens.select(index);
     }
+
+    // matrixTransform.makeTransformable(screen.$el);
 
     return screen;
   };

@@ -2,12 +2,12 @@
   "name": "vjapp",
   "version": "0.0.0",
   "dependencies": {
-    "json3": "~3.3.1",
+    "apps-resource-loader": "https://github.com/GoogleChrome/apps-resource-loader.git",
     "es5-shim": "~3.0.1",
     "jquery": "~1.11.0",
-    "lodash": "~2.4.1",
+    "json3": "~3.3.1",
     "jwerty": "~0.3.2",
-    "requirejs": "~2.1.15",
-    "apps-resource-loader": "https://github.com/GoogleChrome/apps-resource-loader.git"
+    "lodash": "~2.4.1",
+    "requirejs": "~2.1.15"
   }
 }

@@ -81,6 +81,5 @@ This is optional, but it will greatly improve latency and stability.
 
 ### TODOS:
 
-* don't load videos in Hide mode.
 * implement Screes/matrixTransform
 * make all sliders work across websockets.

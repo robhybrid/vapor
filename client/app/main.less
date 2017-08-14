@@ -22,8 +22,6 @@ div#main {
 
 video {
   width: 100%;
-//  object-fit: cover;
-//  overflow: hidden;
   position: absolute;
   top: 0;
 
@@ -36,8 +34,20 @@ video {
   position: absolute;
   width: 100%;
   top: 0;
+  object-fit: contain;
+  display: flex;
+  justify-content: center;
+
   &.off {
     opacity: 0;
+  }
+
+  img {
+    object-fit: contain;
+    object-position: center;
+    height: 100%;
+    width: 100%;
+    mix-blend-mode: lighten;
   }
 }
 
@@ -117,7 +127,7 @@ video {
     background: rgba(255,255,255,0.8);
     &.selected {
       box-sizing: border-box;
-      border: 1em solid #fff;
+      border: 1px solid #fff;
       background: rgba(255,255,255,0.4);
       label {
         color: #fff;

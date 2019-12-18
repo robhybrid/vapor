@@ -22,11 +22,11 @@
     "walk": "2.3.14"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"nodemon server\" \"npm start\""
+    "start": "concurrently \"nodemon server\" \"react-scripts start\""
   },
   "eslintConfig": {
     "extends": "react-app"

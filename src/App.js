@@ -5,18 +5,12 @@ import appStore from './appStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import keyControl from './keyControl';
 
-
-
 function _App() {
 
   useEffect(appStore.fetchMedia, []);
   
   return (
     <div className="App">
-      <style>{`
-
-      `}
-      </style>
       <ReactCSSTransitionGroup
         transitionName="layer"
         transitionEnterTimeout={500}

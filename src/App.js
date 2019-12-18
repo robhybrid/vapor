@@ -4,12 +4,12 @@ import keycode from 'keycode';
 import { observer } from "mobx-react";
 import appStore from './appStore';
 import autopilot from './autopilot';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const blendModes = ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
 
 function _App() {
 
-  const [blendModeIndex, setBlendModeIndex] = useState(2);
   useEffect(() => {
     fetch('http://localhost:3001/api/media')
       .then((res) => res.json())
@@ -21,12 +21,27 @@ function _App() {
   
   return (
     <div className="App">
-      {appStore.layers
-        .map(layer => <div className="media-object" style={{mixBlendMode: appStore.blendMode}}>{
-          layer.filePath.match(/\.gif$/i) ?
-            <img className="gif" src={layer.filePath} alt="" key={layer.filePath}/> :
-            null
-        }</div>)}
+      <style>{`
+
+      `}
+      </style>
+      <ReactCSSTransitionGroup
+        transitionName="layer"
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={300}
+      >
+        {appStore.layers
+          .map(layer => 
+          <div 
+            className="media-object" 
+            style={{mixBlendMode: appStore.blendMode}} 
+            key={layer.filePath}>{
+              layer.filePath.match(/\.gif$/i) ?
+                <img className="gif" src={layer.filePath} alt=""/> :
+                null
+          }</div>)}
+      </ReactCSSTransitionGroup>
+
     </div>
   );
 }
@@ -37,9 +52,9 @@ document.addEventListener('keyup', keyUpListener);
 
 
 function keyDownListener(e) {
-  e.preventDefault();
   const keyName = keycode(e);
   if (keyName === 'tab') {
+    e.preventDefault();
     autopilot.tap();
   }
 }

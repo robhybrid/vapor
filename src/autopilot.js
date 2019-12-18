@@ -56,7 +56,9 @@ const autopilot = {
     const newLayer = {
       filePath: appStore.media[_.random(0, appStore.media.length-1)]
     };
-    appStore.layers = [newLayer];
+    appStore.layers.push(newLayer);
+
+    while(appStore.layers.length > appStore.maxLayers) appStore.layers.shift();
     
   }
 };

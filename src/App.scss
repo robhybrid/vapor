@@ -50,3 +50,18 @@
   }
 }
 
+
+.layer-enter {
+  opacity: 0.01;
+}
+.layer-enter.layer-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.layer-leave {
+  opacity: 1;
+}
+.layer-leave.layer-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}

@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './App.scss';
-import keycode from 'keycode';
 import { observer } from "mobx-react";
 import appStore from './appStore';
-import autopilot from './autopilot';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import keyControl from './keyControl';
 
-const blendModes = ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
+
 
 function _App() {
 
-  useEffect(() => {
-    fetch('http://localhost:3001/api/media')
-      .then((res) => res.json())
-      .then(media => {
-        appStore.media = media;
-      })
-      .catch(err => console.error('filed to fetch media', err));
-    }, []);
+  useEffect(appStore.fetchMedia, []);
   
   return (
     <div className="App">
@@ -47,20 +39,6 @@ function _App() {
 }
 const App = observer(_App);
 
-document.addEventListener('keydown', keyDownListener);
-document.addEventListener('keyup', keyUpListener);
-
-
-function keyDownListener(e) {
-  const keyName = keycode(e);
-  if (keyName === 'tab') {
-    e.preventDefault();
-    autopilot.tap();
-  }
-}
-function keyUpListener() {
-
-}
-
+keyControl.listen();
 
 export default App;

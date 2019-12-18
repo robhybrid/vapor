@@ -10,6 +10,14 @@ const appStore = observable({
   blendModeIndex: 2,
   get blendMode() {
     return this.blendModes[this.blendModeIndex];
+  },
+  fetchMedia() {
+    fetch('http://localhost:3001/api/media')
+    .then((res) => res.json())
+    .then(media => {
+      appStore.media = media;
+    })
+    .catch(err => console.error('filed to fetch media', err));
   }
 });
 

@@ -11,6 +11,9 @@
     "cors": "2.8.5",
     "dotenv": "8.2.0",
     "express": "4.17.1",
+    "keycode": "2.2.0",
+    "mobx": "5.15.1",
+    "mobx-react": "6.1.4",
     "node-sass": "4.13.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -22,7 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"nodemon server\" \npm start\""
+    "dev": "concurrently \"nodemon server\" \"npm start\""
   },
   "eslintConfig": {
     "extends": "react-app"

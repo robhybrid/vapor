@@ -5,6 +5,7 @@ const appStore = observable({
   keysDown: [],
   media: [],
   maxLayers: 2,
+  patchIndex: 0,
   get blendModes() {
     return ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
   },

@@ -83,18 +83,24 @@ const keyControls = [{
 },{
   key: RegExp(`^[${videoKeyChars.join('')}]$`),
   onKeyDown: (e, keyName) => {
-    const filePath = appStore.media[
-      videoKeyChars.indexOf(keyName) + (appStore.patchIndex * videoKeyChars.length)
-    ];
-    console.log('filePath', filePath, videoKeyChars.indexOf(keyName), appStore.patchIndex );
-    if (filePath)
-      appStore.layers.push({
-        keyName,
-        filePath
-      })
+    if (keysDown.includes('caps lock') && appStore.layers.find(layer => layer.keyName === keyName)) {
+      _.remove(appStore.layers, layer => layer.keyName === keyName);
+    } else {
+      const filePath = appStore.media[
+        videoKeyChars.indexOf(keyName) + (appStore.patchIndex * videoKeyChars.length)
+      ];
+      if (filePath)
+        appStore.layers.push({
+          keyName,
+          filePath
+        });
+    }
+
   },
   onKeyUp(e, keyName) {
-    _.remove(appStore.layers, layer => layer.keyName === keyName);
+    if ( ! keysDown.includes('caps lock')) {
+      _.remove(appStore.layers, layer => layer.keyName === keyName);
+    }
   }
 }];
 

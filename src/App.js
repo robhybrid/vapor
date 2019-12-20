@@ -11,10 +11,18 @@ function _App() {
   
   return (
     <div className="App">
+      <style>{`
+        .layer-enter.layer-enter-active {
+          transition-duration: ${appStore.transition.inMs}ms;
+        }
+        .layer-leave.layer-leave-active {
+          transition-duration: ${appStore.transition.outMs}ms;
+        }
+      `}</style>
       <ReactCSSTransitionGroup
         transitionName="layer"
-        transitionEnterTimeout={500}
-        transitionLeaveTimeout={300}
+        transitionEnterTimeout={appStore.transition.inMs}
+        transitionLeaveTimeout={appStore.transition.outMs}
       >
         {appStore.layers
           .map(layer => 
@@ -27,7 +35,20 @@ function _App() {
                 null
           }</div>)}
       </ReactCSSTransitionGroup>
-
+        {appStore.sliders ?
+          <div className="sliders">
+            <div className="slider">
+              <label>transition in (ms) {appStore.transition.inMs}</label>
+              <input type="range" min="1" max="1000" onChange={e => appStore.transition.inMs = +e.target.value} />
+            </div>
+            <div className="slider">
+              <label>transition out (ms) { appStore.transition.outMs}</label>
+              <input type="range" min="1" max="1000" onChange={e => appStore.transition.outMs = +e.target.value} />
+            </div>
+          </div> :
+          null
+        }
+          
     </div>
   );
 }

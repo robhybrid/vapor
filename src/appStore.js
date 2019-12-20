@@ -6,6 +6,10 @@ const appStore = observable({
   media: [],
   maxLayers: 2,
   patchIndex: 0,
+  transition: {
+    in: 100,
+    out: 500
+  },
   get blendModes() {
     return ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
   },

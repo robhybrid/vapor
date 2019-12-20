@@ -7,6 +7,7 @@ const keysDown = [];
 
 function keyDownListener(e) {
   const keyName = keycode(e);
+  if (keysDown.includes(keyName)) return;
   console.log('keyName', keyName);
   const control = keyControls
     .find(control => {
@@ -36,7 +37,7 @@ function keyUpListener(e) {
   if (control && control.onKeyUp) {
     control.onKeyUp(e, keyName);
   }
-  _.remove(keysDown, keyName);
+  _.remove(keysDown, k => k === keyName );
 }
 
 const keyControl = {
@@ -56,21 +57,21 @@ const keyControls = [{
     console.log('tab onkeydown')
     e.preventDefault();
     autopilot.tap();
-}}, {key: 'right',
+}}, {key: '[',
   onKeyDown() {
-    if (keysDown.includes('option')) {
-      appStore.blendModeIndex = (appStore.blendModeIndex + 1) % appStore.blendModes.length;
-    } else {
-      appStore.patchIndex = (appStore.patchIndex + 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
-    }
+    appStore.patchIndex = (appStore.patchIndex + 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
+  }
+}, {key: ']',
+  onKeyDown() {
+    appStore.patchIndex = (appStore.patchIndex - 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
+  }
+}, {key: 'right',
+  onKeyDown() {
+    appStore.blendModeIndex = (appStore.blendModeIndex + 1) % appStore.blendModes.length;
   }
 }, {key: 'left',
   onKeyDown() {
-    if (keysDown.includes('option')) {
-      appStore.blendModeIndex = (appStore.blendModeIndex - 1) % appStore.blendModes.length;
-    } else {
-      appStore.patchIndex = (appStore.patchIndex - 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
-    }
+    appStore.blendModeIndex = (appStore.blendModeIndex - 1) % appStore.blendModes.length;
   }
 }, {key: 'up',
   onKeyDown() {appStore.maxLayers++}
@@ -78,9 +79,15 @@ const keyControls = [{
   onKeyDown() {appStore.maxLayers = Math.max(appStore.maxLayers-1, 0); }
 }, {key: 'space',
   onKeyDown() {
+    // blackout
     appStore.layers = [];
+    autopilot.clearBmp();
   }
-},{
+}, {key: 'alt',
+  onKeyDown() {
+    appStore.sliders = ! appStore.sliders;
+  }
+}, {
   key: RegExp(`^[${videoKeyChars.join('')}]$`),
   onKeyDown: (e, keyName) => {
     if (keysDown.includes('caps lock') && appStore.layers.find(layer => layer.keyName === keyName)) {

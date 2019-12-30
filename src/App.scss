@@ -1,18 +1,16 @@
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .media-object {
   height: 100%;
   width: 100%;
   position: absolute;
   top: 0;
   left: 0;
+  
+  &.enter {
+    animation: 1s forwards fadeIn;
+  }
+  &.exit {
+    animation: 1s forwards fadeOut;
+  }
   img {
     height: 100%;
     width: 100%;
@@ -48,4 +46,13 @@
   .slider {
     transform: rotate(-90deg);
   }
+}
+
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% {opacity: 0;}
 }

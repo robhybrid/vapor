@@ -59,11 +59,17 @@ const keyControls = [{
     autopilot.tap();
 }}, {key: '[',
   onKeyDown() {
-    appStore.patchIndex = (appStore.patchIndex + 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
+    appStore.patchIndex = (appStore.patchIndex - 1);
+    if (appStore.patchIndex < 0) {
+      appStore.patchIndex = Math.floor(appStore.media.length / videoKeyChars.length);
+    }
+    console.log('appStore.patchIndex', appStore.patchIndex);
   }
 }, {key: ']',
   onKeyDown() {
-    appStore.patchIndex = (appStore.patchIndex - 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
+    appStore.patchIndex = (appStore.patchIndex + 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
+    console.log('appStore.patchIndex', appStore.patchIndex);
+
   }
 }, {key: 'right',
   onKeyDown() {
@@ -80,6 +86,10 @@ const keyControls = [{
 }, {key: 'space',
   onKeyDown() {
     // blackout
+    while (appStore.layers.length) {
+      appStore.layers.pop();
+    }
+    appStore.layers.length = 0;
     appStore.layers = [];
     autopilot.clearBmp();
   }
@@ -90,24 +100,34 @@ const keyControls = [{
 }, {
   key: RegExp(`^[${videoKeyChars.join('')}]$`),
   onKeyDown: (e, keyName) => {
-    if (keysDown.includes('caps lock') && appStore.layers.find(layer => layer.keyName === keyName)) {
-      _.remove(appStore.layers, layer => layer.keyName === keyName);
-    } else {
-      const filePath = appStore.media[
-        videoKeyChars.indexOf(keyName) + (appStore.patchIndex * videoKeyChars.length)
-      ];
-      if (filePath)
-        appStore.layers.push({
-          keyName,
-          filePath
-        });
-    }
+    const activeLayer = appStore.layers.find(layer => layer.keyName === keyName);
+    if (activeLayer) {
+      if (activeLayer.exit) {
+        activeLayer.exit = false;
+        clearTimeout(activeLayer.timeout);
+      }
 
+      if (keysDown.includes('caps lock')) {
+        _.remove(appStore.layers, layer => layer.keyName === keyName);
+      }
+      return;
+    }
+    const filePath = appStore.media[
+      videoKeyChars.indexOf(keyName) + (appStore.patchIndex * videoKeyChars.length)
+    ];
+    if (filePath)
+      appStore.layers.push({
+        keyName,
+        filePath
+      });
   },
   onKeyUp(e, keyName) {
-    if ( ! keysDown.includes('caps lock')) {
-      _.remove(appStore.layers, layer => layer.keyName === keyName);
-    }
+    const layer = appStore.layers.find(layer => layer.keyName === keyName);
+    if ( ! layer) return;
+    layer.exit = true;
+    layer.timeout = setTimeout(() => {
+      _.remove(appStore.layers, layer);
+    }, appStore.transition.outMs) 
   }
 }];
 

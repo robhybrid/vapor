@@ -1,5 +1,6 @@
 import { observable } from "mobx";
 import config from './config';
+import _ from 'lodash';
 
 const appStore = observable({
   layers: [],
@@ -10,6 +11,15 @@ const appStore = observable({
   transition: {
     inMs: 100,
     outMs: 500
+  },
+  filter: {
+    sepia: 0,
+    blur: 0,
+    brightness: 1,
+    contrast: 1,
+    saturate: 1,
+    'hue-rotate': 0,
+    opacity: 1,
   },
   kaleidosSegments: 6,
   get blendModes() {
@@ -28,5 +38,7 @@ const appStore = observable({
     .catch(err => console.error('filed to fetch media', err));
   }
 });
+
+appStore.originalFilter = _.clone(appStore.filter);
 
 export default appStore;

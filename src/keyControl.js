@@ -6,6 +6,15 @@ import { message, onMessage } from './socket';
 
 const keysDown = [];
 
+
+window.addEventListener("touchstart", e => {
+  autopilot.tap();
+  message({
+    keyName: 'tab',
+    eventType: 'keyDown'
+  });
+}, false);
+
 onMessage((data) => {
   if (_.get(data, 'eventType') === 'keyDown') {
     pushKey(null, data.keyName);

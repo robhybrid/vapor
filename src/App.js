@@ -13,10 +13,13 @@ function _App() {
     appStore.fetchMedia();
     connect();
   }, []);
-  console.log(appStore.layers);
+
   return (
     <div className="App">
       <style>{`
+        .media-object {
+          filter: ${cssFilter(appStore.filter)};
+        }
         .media-object.enter {
           animation-duration: ${appStore.transition.inMs}ms;
         }
@@ -24,10 +27,10 @@ function _App() {
           animation-duration: ${appStore.transition.outMs}ms;
         }
       `}</style>
-      {_.uniqBy(appStore.layers, 'keyName')
+      {_.uniqBy(appStore.layers, 'filePath')
         .map(layer => {
           if (layer.filePath.match(/\.jpg$/i) && ! layer.speed) {
-            layer.speed = parseInt(Math.random() * 8) + 1
+            layer.speed = parseInt(Math.random() * 10) + 1
           }
           return layer;
         })
@@ -38,7 +41,7 @@ function _App() {
             enter: ! layer.exit
             }) } 
           style={{mixBlendMode: appStore.blendMode}} 
-          key={layer.keyName}>{
+          key={layer.filePath}>{
             layer.filePath.match(/\.gif$/i) ?
               <img className="gif" src={layer.filePath} alt=""/> :
               layer.filePath.match(/\.mov$/i) ?
@@ -62,7 +65,36 @@ function _App() {
               <label>Kaleidos Segments { appStore.kaleidosSegments}</label>
               <input type="range" min="2" max="32" onChange={e => appStore.kaleidosSegments = +e.target.value} value={appStore.kaleidosSegments} />
             </div>
-            
+
+            <div className="slider">
+              <label>opacity {appStore.filter.opacity}</label>
+              <input type="range" min="0" max="1" step="0.01" onChange={e => appStore.filter.opacity = +e.target.value} value={appStore.filter.opacity} />
+            </div>
+            <div className="slider">
+              <label>Sepia { appStore.filter.sepia}</label>
+              <input type="range" min="0" max="1" step="0.01" onChange={e => appStore.filter.sepia = +e.target.value} value={appStore.filter.sepia} />
+            </div>
+            <div className="slider">
+              <label>Blur { appStore.filter.blur}</label>
+              <input type="range" min="0" max="100" onChange={e => appStore.filter.blur = +e.target.value} value={appStore.filter.blur} />
+            </div>
+            <div className="slider">
+              <label>brightness { appStore.filter.brightness}</label>
+              <input type="range" min="0" max="3" step="0.01" onChange={e => appStore.filter.brightness = +e.target.value} value={appStore.filter.brightness} />
+            </div>
+            <div className="slider">
+              <label>contrast { appStore.filter.contrast}</label>
+              <input type="range" min="0" max="3" step="0.01" onChange={e => appStore.filter.contrast = +e.target.value} value={appStore.filter.contrast} />
+            </div>
+            <div className="slider">
+              <label>saturate { appStore.filter.saturate}</label>
+              <input type="range" min="0" max="3" step="0.01" onChange={e => appStore.filter.saturate = +e.target.value} value={appStore.filter.saturate} />
+            </div>
+            <div className="slider">
+              <label>saturate { appStore.filter['hue-rotate']}</label>
+              <input type="range" min="0" max="360" onChange={e => appStore.filter['hue-rotate'] = +e.target.value} value={appStore.filter['hue-rotate']} />
+            </div>
+            <button onClick={()=>appStore.filter = _.clone(appStore.originalFilter) }>reset</button>
           </div> :
           null
         }
@@ -70,6 +102,7 @@ function _App() {
     </div>
   );
 }
+
 const App = observer(_App);
 
 keyControl.listen();
@@ -78,4 +111,19 @@ export default App;
 
 function _class() {
   return {className: classNames(...arguments)};
+}
+
+function cssFilter(filter) {
+
+  const units = {
+    'hue-rotate': 'deg',
+    'blur': 'px'
+  }
+  return Object.keys(filter)
+    .map((key) => {
+      return {key, value: filter[key]}
+    })
+    .filter(pair => pair.value !== appStore.originalFilter[pair.key] )
+    .map(pair => `${pair.key}(${pair.value}${units[pair.key] || ''})`)
+    .join(' ');
 }

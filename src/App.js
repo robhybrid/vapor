@@ -13,7 +13,7 @@ function _App() {
     appStore.fetchMedia();
     connect();
   }, []);
-  
+  console.log(appStore.layers);
   return (
     <div className="App">
       <style>{`
@@ -25,6 +25,12 @@ function _App() {
         }
       `}</style>
       {_.uniqBy(appStore.layers, 'keyName')
+        .map(layer => {
+          if (layer.filePath.match(/\.jpg$/i) && ! layer.speed) {
+            layer.speed = parseInt(Math.random() * 8) + 1
+          }
+          return layer;
+        })
         .map(layer => 
         <div 
           {..._class("media-object",
@@ -37,7 +43,9 @@ function _App() {
               <img className="gif" src={layer.filePath} alt=""/> :
               layer.filePath.match(/\.mov$/i) ?
                 <video src={layer.filePath} autoPlay={true}/> :
-                null
+                layer.filePath.match(/\.jpg$/i) ?
+                  <iframe src={`/kaleidos/index.html?n=${appStore.kaleidosSegments}&src=${layer.filePath}&timeout=0&s=${layer.speed}`} title={layer.keyName} /> : 
+                  null
 
         }</div>)}
         {appStore.sliders ?
@@ -50,6 +58,11 @@ function _App() {
               <label>transition out (ms) { appStore.transition.outMs}</label>
               <input type="range" min="1" max="1000" onChange={e => appStore.transition.outMs = +e.target.value} value={appStore.transition.outMs} />
             </div>
+            <div className="slider">
+              <label>Kaleidos Segments { appStore.kaleidosSegments}</label>
+              <input type="range" min="2" max="32" onChange={e => appStore.kaleidosSegments = +e.target.value} value={appStore.kaleidosSegments} />
+            </div>
+            
           </div> :
           null
         }

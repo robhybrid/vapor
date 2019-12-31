@@ -1,5 +1,9 @@
+const apiRoot = new URL(window.location);
+apiRoot.port = 3001;
+
+
 const config = {
-  apiRoot: 'http://localhost:3001/'
+  apiRoot: apiRoot.origin + '/'
 };
 
 export default config;

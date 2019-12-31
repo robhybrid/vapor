@@ -11,6 +11,7 @@ const appStore = observable({
     inMs: 100,
     outMs: 500
   },
+  kaleidosSegments: 6,
   get blendModes() {
     return ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
   },

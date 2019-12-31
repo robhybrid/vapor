@@ -132,7 +132,7 @@ const keyControls = [{
         clearTimeout(activeLayer.timeout);
       }
 
-      if (keysDown.includes('caps lock')) {
+      if (keysDown.includes('caps lock') || keysDown.includes('shift')) {
         _.remove(appStore.layers, layer => layer.keyName === keyName);
       }
       return;
@@ -148,6 +148,9 @@ const keyControls = [{
   },
   onKeyUp(e, keyName) {
     const layer = appStore.layers.find(layer => layer.keyName === keyName);
+    if (keysDown.includes('caps lock') || keysDown.includes('shift')) {
+      return;
+    }
     if ( ! layer) return;
     layer.exit = true;
     layer.timeout = setTimeout(() => {

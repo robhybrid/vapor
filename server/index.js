@@ -2,11 +2,19 @@ require('dotenv').config();
 const walk    = require('walk');
 const express = require('express');
 const cors = require('cors');
+const getIpAddress = require('./getIpAddress');
+const sockets = require('./sockets');
+const socketIo = require('socket.io');
 
-// const bodyParser = require('body-parser');
+const http = require('http');
 
 const API_PORT = process.env.PORT || 3001;
 const app = express();
+
+const server =  http.Server(app);
+const io = socketIo(server);
+sockets(io);
+
 app.use(cors());
 const router = express.Router();
 
@@ -50,20 +58,6 @@ function walkLocalFiles(req, res) {
 
 
 app.use('/api', router);
-app.listen(API_PORT, () => console.log(`SERVER LISTENING ON PORT ${API_PORT}`));
 
-
-function getIpAddress() {
-  // get IP address
-  var os=require('os');
-  var ifaces=os.networkInterfaces();
-  var ip;
-  Object.keys(ifaces).forEach(function(dev) {
-    ifaces[dev].forEach(function(details) {
-      if (details.family === 'IPv4') {
-        ip = details.address;
-      }
-    });
-  });
-  return ip;
-}
+// app.listen(API_PORT, () => console.log(`SERVER LISTENING ON PORT ${API_PORT}`));
+server.listen(API_PORT, () => console.log(`SERVER LISTENING ON PORT ${API_PORT} with websockets`));

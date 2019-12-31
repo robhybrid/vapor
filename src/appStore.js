@@ -1,4 +1,5 @@
 import { observable } from "mobx";
+import config from './config';
 
 const appStore = observable({
   layers: [],
@@ -18,7 +19,7 @@ const appStore = observable({
     return this.blendModes[this.blendModeIndex];
   },
   fetchMedia() {
-    fetch('http://localhost:3001/api/media')
+    fetch(`${config.apiRoot}api/media`)
     .then((res) => res.json())
     .then(media => {
       appStore.media = media;

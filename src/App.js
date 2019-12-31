@@ -4,10 +4,15 @@ import { observer } from "mobx-react";
 import appStore from './appStore';
 import keyControl from './keyControl';
 import classNames from 'classnames';
+import { connect } from './socket';
+import _ from 'lodash';
 
 function _App() {
 
-  useEffect(appStore.fetchMedia, []);
+  useEffect(() => {
+    appStore.fetchMedia();
+    connect();
+  }, []);
   
   return (
     <div className="App">
@@ -19,7 +24,7 @@ function _App() {
           animation-duration: ${appStore.transition.outMs}ms;
         }
       `}</style>
-      {appStore.layers
+      {_.uniqBy(appStore.layers, 'keyName')
         .map(layer => 
         <div 
           {..._class("media-object",
@@ -27,10 +32,13 @@ function _App() {
             enter: ! layer.exit
             }) } 
           style={{mixBlendMode: appStore.blendMode}} 
-          key={layer.filePath}>{
+          key={layer.keyName}>{
             layer.filePath.match(/\.gif$/i) ?
               <img className="gif" src={layer.filePath} alt=""/> :
-              null
+              layer.filePath.match(/\.mov$/i) ?
+                <video src={layer.filePath} autoPlay={true}/> :
+                null
+
         }</div>)}
         {appStore.sliders ?
           <div className="sliders">

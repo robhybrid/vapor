@@ -2,13 +2,32 @@ import autopilot from './autopilot';
 import keycode from 'keycode';
 import appStore from './appStore';
 import _ from 'lodash';
+import { message, onMessage } from './socket';
 
 const keysDown = [];
+
+onMessage((data) => {
+  if (_.get(data, 'eventType') === 'keyDown') {
+    pushKey(null, data.keyName);
+  } else if (_.get(data, 'eventType') === 'keyUp') {
+    liftKey(null, data.keyName);
+  }
+});
 
 function keyDownListener(e) {
   const keyName = keycode(e);
   if (keysDown.includes(keyName)) return;
+  message({
+    keyName,
+    eventType: 'keyDown'
+  });
+
   console.log('keyName', keyName);
+  pushKey(e, keyName);
+  keysDown.push(e, keyName);
+}
+
+function pushKey(e, keyName) {
   const control = keyControls
     .find(control => {
       if (typeof control.key === 'string') {
@@ -21,10 +40,19 @@ function keyDownListener(e) {
   if (control && control.onKeyDown) {
     control.onKeyDown(e, keyName);
   }
-  keysDown.push(keyName);
 }
+
 function keyUpListener(e) {
   const keyName = keycode(e);
+  message({
+    keyName,
+    eventType: 'keyUp'
+  });
+  liftKey(e, keyName);
+  _.remove(keysDown, k => k === keyName );
+}
+
+function liftKey(e, keyName) {
   const control = keyControls
     .find(control => {
       if (typeof control.key === 'string') {
@@ -37,7 +65,6 @@ function keyUpListener(e) {
   if (control && control.onKeyUp) {
     control.onKeyUp(e, keyName);
   }
-  _.remove(keysDown, k => k === keyName );
 }
 
 const keyControl = {
@@ -54,8 +81,7 @@ const videoKeyChars = Object.freeze(
 const keyControls = [{
   key: 'tab',
   onKeyDown: (e) => {
-    console.log('tab onkeydown')
-    e.preventDefault();
+    e && e.preventDefault();
     autopilot.tap();
 }}, {key: '[',
   onKeyDown() {
@@ -69,7 +95,6 @@ const keyControls = [{
   onKeyDown() {
     appStore.patchIndex = (appStore.patchIndex + 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
     console.log('appStore.patchIndex', appStore.patchIndex);
-
   }
 }, {key: 'right',
   onKeyDown() {
@@ -128,6 +153,16 @@ const keyControls = [{
     layer.timeout = setTimeout(() => {
       _.remove(appStore.layers, layer);
     }, appStore.transition.outMs) 
+  }
+}, {key: /[\d]/,
+  onKeyDown(e, keyName) {
+    appStore.layers.push({
+      keyName,
+      filePath: `/countdown/${keyName === '0' ? '10' : keyName}.mov`
+    })
+  },
+  onKeyUp(e, keyName) {
+    _.remove(appStore.layers, layer => layer.keyName === keyName);
   }
 }];
 

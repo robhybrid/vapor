@@ -28,6 +28,7 @@ function _App() {
         }
       `}</style>
       {_.uniqBy(appStore.layers, 'filePath')
+        .filter(layer => layer.filePath)
         .map(layer => {
           if (layer.filePath.match(/\.jpg$/i) && ! layer.speed) {
             layer.speed = parseInt(Math.random() * 10) + 1

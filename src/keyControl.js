@@ -33,10 +33,10 @@ function keyDownListener(e) {
 
   console.log('keyName', keyName);
   pushKey(e, keyName);
-  keysDown.push(e, keyName);
 }
 
 function pushKey(e, keyName) {
+  keysDown.push(keyName);
   const control = keyControls
     .find(control => {
       if (typeof control.key === 'string') {
@@ -58,10 +58,10 @@ function keyUpListener(e) {
     eventType: 'keyUp'
   });
   liftKey(e, keyName);
-  _.remove(keysDown, k => k === keyName );
 }
 
 function liftKey(e, keyName) {
+  _.remove(keysDown, k => k === keyName);
   const control = keyControls
     .find(control => {
       if (typeof control.key === 'string') {
@@ -112,6 +112,10 @@ onKeyDown() {
   onKeyDown() {
     appStore.patchIndex = (appStore.patchIndex + 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
     console.log('appStore.patchIndex', appStore.patchIndex);
+  }
+}, {key: '\\', // '\'
+  onKeyDown() {
+    appStore.patchIndex = 0;
   }
 }, {key: 'right',
   onKeyDown() {

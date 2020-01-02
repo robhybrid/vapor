@@ -92,7 +92,15 @@ const keyControls = [{
   onKeyDown: (e) => {
     e && e.preventDefault();
     autopilot.tap();
-}}, {key: '[',
+}}, {key: '=', // '+'
+  onKeyDown() {
+    if (appStore.kaleidosSegments < 32) appStore.kaleidosSegments++;
+  }
+}, {key: '-',
+onKeyDown() {
+  if (appStore.kaleidosSegments > 2) appStore.kaleidosSegments--;
+}
+}, {key: '[',
   onKeyDown() {
     appStore.patchIndex = (appStore.patchIndex - 1);
     if (appStore.patchIndex < 0) {

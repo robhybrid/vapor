@@ -88,6 +88,11 @@ const videoKeyChars = Object.freeze(
 );
 
 const keyControls = [{
+  key: '`',
+  onKeyDown() {
+    appStore.transmit = ! appStore.transmit;
+  }
+}, {
   key: 'tab',
   onKeyDown: (e) => {
     e && e.preventDefault();

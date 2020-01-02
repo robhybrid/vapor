@@ -1,5 +1,6 @@
 import socketIOClient from "socket.io-client";
 import config from './config';
+import appStore from "./appStore";
 
 let socket;
 
@@ -13,6 +14,7 @@ function connect() {
 }
 
 function message(message) {
+  if ( ! appStore.transmit) return;
   socket && socket.emit('message', message);
 }
 

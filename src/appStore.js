@@ -3,6 +3,7 @@ import config from './config';
 import _ from 'lodash';
 
 const appStore = observable({
+  transmit: true,
   layers: [],
   keysDown: [],
   media: [],

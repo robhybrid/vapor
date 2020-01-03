@@ -15,7 +15,7 @@ function _App() {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" onClick={requestFullscreen}>
       <style>{`
         .media-object {
           filter: ${cssFilter(appStore.filter)};
@@ -127,4 +127,20 @@ function cssFilter(filter) {
     .filter(pair => pair.value !== appStore.originalFilter[pair.key] )
     .map(pair => `${pair.key}(${pair.value}${units[pair.key] || ''})`)
     .join(' ');
+}
+
+function requestFullscreen() {
+  const docElm = document.documentElement;
+  if (docElm.requestFullscreen) {
+      docElm.requestFullscreen();
+  }
+  else if (docElm.mozRequestFullScreen) {
+      docElm.mozRequestFullScreen();
+  }
+  else if (docElm.webkitRequestFullScreen) {
+      docElm.webkitRequestFullScreen();
+  }
+  else if (docElm.msRequestFullscreen) {
+      docElm.msRequestFullscreen();
+  }
 }

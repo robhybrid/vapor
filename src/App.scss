@@ -2,6 +2,10 @@ body, html {
   overflow: hidden;
 }
 
+.App {
+  height: 100vh;
+}
+
 .media-object {
   height: 100%;
   width: 100%;
@@ -47,9 +51,20 @@ body, html {
   flex-wrap: wrap;
   label {
     display: block;
+    transform: rotate(-90deg);
+    width: 30vh;
+    transform-origin: 0 0;
+    input {
+      width: 100%;
+    }
+
   }
   .slider {
-    transform: rotate(-90deg);
+    width: 4em;
+    height: 32vh;
+  }
+  button {
+    height: 2em;
   }
 }
 

@@ -12,6 +12,7 @@
     "cors": "2.8.5",
     "dotenv": "8.2.0",
     "express": "4.17.1",
+    "fullscreen-polyfill": "1.0.2",
     "keycode": "2.2.0",
     "mobx": "5.15.1",
     "mobx-react": "6.1.4",

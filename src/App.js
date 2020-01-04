@@ -54,47 +54,17 @@ function _App() {
         }</div>)}
         {appStore.sliders ?
           <div className="sliders">
-            <div className="slider">
-              <label>transition in (ms) {appStore.transition.inMs}</label>
-              <input type="range" min="1" max="1000" onChange={e => appStore.transition.inMs = +e.target.value} value={appStore.transition.inMs} />
-            </div>
-            <div className="slider">
-              <label>transition out (ms) { appStore.transition.outMs}</label>
-              <input type="range" min="1" max="1000" onChange={e => appStore.transition.outMs = +e.target.value} value={appStore.transition.outMs} />
-            </div>
-            <div className="slider">
-              <label>Kaleidos Segments { appStore.kaleidosSegments}</label>
-              <input type="range" min="2" max="32" onChange={e => appStore.kaleidosSegments = +e.target.value} value={appStore.kaleidosSegments} />
-            </div>
 
-            <div className="slider">
-              <label>opacity {appStore.filter.opacity}</label>
-              <input type="range" min="0" max="1" step="0.01" onChange={e => appStore.filter.opacity = +e.target.value} value={appStore.filter.opacity} />
-            </div>
-            <div className="slider">
-              <label>Sepia { appStore.filter.sepia}</label>
-              <input type="range" min="0" max="1" step="0.01" onChange={e => appStore.filter.sepia = +e.target.value} value={appStore.filter.sepia} />
-            </div>
-            <div className="slider">
-              <label>Blur { appStore.filter.blur}</label>
-              <input type="range" min="0" max="100" onChange={e => appStore.filter.blur = +e.target.value} value={appStore.filter.blur} />
-            </div>
-            <div className="slider">
-              <label>brightness { appStore.filter.brightness}</label>
-              <input type="range" min="0" max="3" step="0.01" onChange={e => appStore.filter.brightness = +e.target.value} value={appStore.filter.brightness} />
-            </div>
-            <div className="slider">
-              <label>contrast { appStore.filter.contrast}</label>
-              <input type="range" min="0" max="3" step="0.01" onChange={e => appStore.filter.contrast = +e.target.value} value={appStore.filter.contrast} />
-            </div>
-            <div className="slider">
-              <label>saturate { appStore.filter.saturate}</label>
-              <input type="range" min="0" max="3" step="0.01" onChange={e => appStore.filter.saturate = +e.target.value} value={appStore.filter.saturate} />
-            </div>
-            <div className="slider">
-              <label>saturate { appStore.filter['hue-rotate']}</label>
-              <input type="range" min="0" max="360" onChange={e => appStore.filter['hue-rotate'] = +e.target.value} value={appStore.filter['hue-rotate']} />
-            </div>
+            <Slider label="fade in (ms)" min="1" max="1000" value={appStore.transition.inMs} setter={v => appStore.transition.inMs = v}/>
+            <Slider label="fade out (ms)" min="1" max="1000" value={appStore.transition.outMs} setter={v => appStore.transition.outMs = v}/>
+            <Slider label="Kaleidos Segments" min="2" max="32" step="1" value={appStore.kaleidosSegments} setter={v => appStore.kaleidosSegments = v}/>
+            <Slider label="opacity" value={appStore.filter.opacity} setter={v => appStore.filter.opacity = v}/>
+            <Slider label="sepia" value={appStore.filter.sepia} setter={v => appStore.filter.sepia = v}/>
+            <Slider label="blur" max="100" value={appStore.filter.blur} setter={v => appStore.filter.blur = v}/>
+            <Slider label="brightness" max="3" value={appStore.filter.brightness} setter={v => appStore.filter.brightness = v}/>
+            <Slider label="contrast" max="3" value={appStore.filter.contrast} setter={v => appStore.filter.contrast = v}/>
+            <Slider label="saturate" max="3" value={appStore.filter.saturate} setter={v => appStore.filter.saturate = v}/>
+            <Slider label="hue-rotate" max="360" value={appStore.filter['hue-rotate']} setter={v => appStore.filter['hue-rotate'] = v}/>
             <button onClick={()=>appStore.filter = _.clone(appStore.originalFilter) }>reset</button>
           </div> :
           null
@@ -130,17 +100,15 @@ function cssFilter(filter) {
 }
 
 function requestFullscreen() {
-  const docElm = document.documentElement;
-  if (docElm.requestFullscreen) {
-      docElm.requestFullscreen();
-  }
-  else if (docElm.mozRequestFullScreen) {
-      docElm.mozRequestFullScreen();
-  }
-  else if (docElm.webkitRequestFullScreen) {
-      docElm.webkitRequestFullScreen();
-  }
-  else if (docElm.msRequestFullscreen) {
-      docElm.msRequestFullscreen();
-  }
+  document.documentElement.requestFullscreen()
+      .catch(e => console.error(e));
+}
+
+function Slider({value, setter, min=0, max=1, step=0.01, label=''}) {
+  return (
+  <div className="slider">
+    <label>{label} {value}
+      <input type="range" min={min} max={max} step={step} onChange={e => setter(+e.target.value)} value={value} />
+    </label>
+  </div>);
 }

@@ -4,6 +4,18 @@ body, html {
 
 .App {
   height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.display {
+  &.circle {
+    height: 100vh;
+    width: 100vh;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+  }
 }
 
 .media-object {

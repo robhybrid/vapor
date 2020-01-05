@@ -151,6 +151,9 @@ onKeyDown() {
 }, {
   key: RegExp(`^[${videoKeyChars.join('')}]$`),
   onKeyDown: (e, keyName) => {
+    if (e) {
+      debugger;
+    }
     const activeLayer = appStore.layers.find(layer => layer.keyName === keyName);
     if (activeLayer) {
       if (activeLayer.exit) {

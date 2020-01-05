@@ -37,7 +37,8 @@ const appStore = observable({
       appStore.media = media;
     })
     .catch(err => console.error('filed to fetch media', err));
-  }
+  },
+  display: {}
 });
 
 appStore.originalFilter = _.clone(appStore.filter);

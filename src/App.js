@@ -27,6 +27,8 @@ function _App() {
           animation-duration: ${appStore.transition.outMs}ms;
         }
       `}</style>
+
+      <div className={classNames('display', appStore.display)}>
       {_.uniqBy(appStore.layers, 'filePath')
         .filter(layer => layer.filePath)
         .map(layer => {
@@ -42,7 +44,8 @@ function _App() {
             enter: ! layer.exit
             }) } 
           style={{mixBlendMode: appStore.blendMode}} 
-          key={layer.filePath}>{
+          key={layer.filePath}>
+          {
             layer.filePath.match(/\.gif$/i) ?
               <img className="gif" src={layer.filePath} alt=""/> :
               layer.filePath.match(/\.mov$/i) ?
@@ -52,6 +55,7 @@ function _App() {
                   null
 
         }</div>)}
+        </div>
         {appStore.sliders ?
           <div className="sliders">
 
@@ -66,6 +70,8 @@ function _App() {
             <Slider label="saturate" max="3" value={appStore.filter.saturate} setter={v => appStore.filter.saturate = v}/>
             <Slider label="hue-rotate" max="360" value={appStore.filter['hue-rotate']} setter={v => appStore.filter['hue-rotate'] = v}/>
             <button onClick={()=>appStore.filter = _.clone(appStore.originalFilter) }>reset</button>
+            
+            <button onClick={() => appStore.display.circle = ! appStore.display.circle }>circle</button>
           </div> :
           null
         }

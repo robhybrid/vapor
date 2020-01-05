@@ -9,12 +9,9 @@ body, html {
 }
 
 .display {
+  flex: 1 1 auto;
   &.circle {
-    height: 100vh;
-    width: 100vh;
-    border-radius: 50%;
-    position: relative;
-    overflow: hidden;
+    clip-path: circle(50vh);
   }
 }
 
@@ -38,6 +35,13 @@ body, html {
   }
 }
 
+#mask {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
 .layer-enter {
   opacity: 0.01;
@@ -62,6 +66,7 @@ body, html {
   color: #fff;
   flex-wrap: wrap;
   label {
+    background: rgba(0,0,0,0.5);
     display: block;
     transform: rotate(-90deg);
     width: 30vh;

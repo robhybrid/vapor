@@ -15,7 +15,7 @@ function _App() {
   }, []);
 
   return (
-    <div className="App" onClick={requestFullscreen}>
+    <div className="App" onClick={appClick}    onDoubleClick={closeMask}>
       <style>{`
         .media-object {
           filter: ${cssFilter(appStore.filter)};
@@ -28,7 +28,10 @@ function _App() {
         }
       `}</style>
 
-      <div className={classNames('display', appStore.display)}>
+      <div className={classNames('display', appStore.display)} 
+     
+        style={displayStyle()}
+      >
       {_.uniqBy(appStore.layers, 'filePath')
         .filter(layer => layer.filePath)
         .map(layer => {
@@ -72,10 +75,24 @@ function _App() {
             <button onClick={()=>appStore.filter = _.clone(appStore.originalFilter) }>reset</button>
             
             <button onClick={() => appStore.display.circle = ! appStore.display.circle }>circle</button>
+            <button onClick={drawMask}>
+              {appStore.display.drawingMask ? 'Release Mask' : 'Draw Mask'}
+            </button>
           </div> :
           null
         }
-          
+
+      {appStore.display.maskPoints ? 
+        <svg id="mask">
+          <polygon fill="none" 
+          stroke={appStore.display.drawingMask ? 
+            'white' : 
+            null}
+           points={appStore.display.maskPoints
+            .map(point => `${point.x},${point.y}`)
+            .join(' ')}/>
+        </svg> 
+        : null}
     </div>
   );
 }
@@ -105,7 +122,15 @@ function cssFilter(filter) {
     .join(' ');
 }
 
-function requestFullscreen() {
+function appClick(e) {
+  if (display.maskPoints && display.drawingMask) {
+    display.maskPoints.push({
+      x: e.clientX,
+      y: e.clientY
+    });
+  }
+
+
   document.documentElement.requestFullscreen()
       .catch(e => console.error(e));
 }
@@ -117,4 +142,39 @@ function Slider({value, setter, min=0, max=1, step=0.01, label=''}) {
       <input type="range" min={min} max={max} step={step} onChange={e => setter(+e.target.value)} value={value} />
     </label>
   </div>);
+}
+
+const display = appStore.display;
+
+function drawMask(e) {
+  e.stopPropagation();
+  const display = appStore.display;
+  if (display.maskPoints) {
+    display.drawingMask = false;
+    display.maskPoints = null;
+  } else {
+    display.circle = false;
+    display.drawingMask = true;
+    display.maskPoints = [];
+    appStore.sliders = false;
+  }
+}
+
+function closeMask() {
+  display.drawingMask = false;
+  if (display.maskPoints) {
+    display.maskPoints.pop();
+  }
+}
+
+function displayStyle() {
+  const style = {};
+  if (display.maskPoints && ! display.drawingMask) {
+    style.clipPath = `polygon(${
+      display.maskPoints
+        .map(p => `${p.x}px ${p.y}px`)
+        .join(', ')
+    })`;
+  }
+  return style;
 }

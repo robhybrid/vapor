@@ -1,8 +1,10 @@
 import { observable } from "mobx";
 import config from './config';
 import _ from 'lodash';
+import prefs from './utils/prefs';
 
 const appStore = observable({
+  prefs,
   transmit: true,
   layers: [],
   keysDown: [],

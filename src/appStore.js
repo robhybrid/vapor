@@ -36,7 +36,15 @@ const appStore = observable({
     fetch(`${config.apiRoot}api/media`)
     .then((res) => res.json())
     .then(media => {
+      appStore.allMedia = media;
       appStore.media = media;
+      appStore.directories = _.uniq(
+        media.map(path => {
+          const matches = path.match(/media\/(.*)\/[^/]+/);
+          return matches && matches[1];
+        })
+        .filter(p => p)
+      );
     })
     .catch(err => console.error('filed to fetch media', err));
   },

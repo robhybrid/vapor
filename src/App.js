@@ -73,11 +73,16 @@ function _App() {
             <Slider label="saturate" max="3" value={appStore.filter.saturate} setter={v => appStore.filter.saturate = v}/>
             <Slider label="hue-rotate" max="360" value={appStore.filter['hue-rotate']} setter={v => appStore.filter['hue-rotate'] = v}/>
             <button onClick={()=>appStore.filter = _.clone(appStore.originalFilter) }>reset</button>
-            
             <button onClick={() => appStore.display.circle = ! appStore.display.circle }>circle</button>
             <button onClick={drawMask}>
               {appStore.display.drawingMask ? 'Release Mask' : 'Draw Mask'}
             </button>
+
+            <select onChange={groupChange}>
+              <option value=''>All</option>
+              {appStore.directories.map(dir => <option 
+                value={dir} selected={appStore.selectedGroup === dir}>{dir}</option>)}
+            </select>
           </div> :
           null
         }
@@ -177,4 +182,10 @@ function displayStyle() {
     })`;
   }
   return style;
+}
+
+function groupChange(e) {
+  appStore.selectedGroup = e.target.value;
+  appStore.media = appStore.allMedia
+    .filter(path => path.indexOf(e.target.value) !== -1 );
 }

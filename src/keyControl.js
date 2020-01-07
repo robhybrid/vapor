@@ -128,7 +128,10 @@ onKeyDown() {
   }
 }, {key: 'left',
   onKeyDown() {
-    appStore.blendModeIndex = (appStore.blendModeIndex - 1) % appStore.blendModes.length;
+    appStore.blendModeIndex = appStore.blendModeIndex < 1 ? 
+      appStore.blendModes.length - 1 :
+      (appStore.blendModeIndex - 1) % appStore.blendModes.length;
+
   }
 }, {key: 'up',
   onKeyDown() {appStore.maxLayers++}

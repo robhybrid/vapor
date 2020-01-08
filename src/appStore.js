@@ -4,6 +4,7 @@ import _ from 'lodash';
 import prefs from './utils/prefs';
 
 const appStore = observable({
+  loopVideo: true,
   prefs,
   transmit: true,
   layers: [],

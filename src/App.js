@@ -52,7 +52,7 @@ function _App() {
             layer.filePath.match(/\.gif$/i) ?
               <img className="gif" src={layer.filePath} alt=""/> :
               layer.filePath.match(/\.(m4v|mov|webm|mp4)$/i) ?
-                <video src={layer.filePath} autoPlay={true}/> :
+                <video src={layer.filePath} autoPlay={true} loop={appStore.loopVideo}/> :
                 layer.filePath.match(/\.jpg$/i) ?
                   <iframe src={`/kaleidos/index.html?n=${appStore.kaleidosSegments}&src=${layer.filePath}&timeout=0&s=${layer.speed}`} title={layer.keyName} /> : 
                   null

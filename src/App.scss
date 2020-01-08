@@ -85,6 +85,15 @@ body, html {
   }
 }
 
+.color {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  mix-blend-mode: color;
+}
+
 video {
   object-fit: contain;
   width: 100%;

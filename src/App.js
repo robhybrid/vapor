@@ -51,16 +51,19 @@ function _App() {
           {
             layer.filePath.match(/\.gif$/i) ?
               <img className="gif" src={layer.filePath} alt=""/> :
-              layer.filePath.match(/\.mov$/i) ?
+              layer.filePath.match(/\.(m4v|mov|webm|mp4)$/i) ?
                 <video src={layer.filePath} autoPlay={true}/> :
                 layer.filePath.match(/\.jpg$/i) ?
                   <iframe src={`/kaleidos/index.html?n=${appStore.kaleidosSegments}&src=${layer.filePath}&timeout=0&s=${layer.speed}`} title={layer.keyName} /> : 
                   null
 
         }</div>)}
+        
+        {appStore.color ? <div className="color" style={{background: appStore.color}}></div> : null}
+
         </div>
         {appStore.sliders ?
-          <div className="sliders">
+          <div className="sliders" onClick={e => e.stopPropagation()}>
 
             <Slider label="fade in (ms)" min="1" max="1000" value={appStore.transition.inMs} setter={v => appStore.transition.inMs = v}/>
             <Slider label="fade out (ms)" min="1" max="1000" value={appStore.transition.outMs} setter={v => appStore.transition.outMs = v}/>
@@ -81,8 +84,10 @@ function _App() {
             <select onChange={groupChange}>
               <option value=''>All</option>
               {appStore.directories.map(dir => <option 
-                value={dir} selected={appStore.selectedGroup === dir}>{dir}</option>)}
+                value={dir} selected={appStore.selectedGroup === dir}>{decodeURI(dir)}</option>)}
             </select>
+
+            <input type="color" onChange={e => appStore.color = e.target.value}/>
           </div> :
           null
         }

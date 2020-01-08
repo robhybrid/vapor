@@ -11,6 +11,6 @@ const prefs = observable(_prefs);
 
 export default prefs;
 
-observe(prefs, (prefs)=> {
+observe(prefs, (change)=> {
   localStorage.prefs = JSON.stringify(prefs);
 });

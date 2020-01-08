@@ -1,6 +1,7 @@
 import socketIOClient from "socket.io-client";
 import config from './config';
 import appStore from "./appStore";
+import prefs from './utils/prefs';
 
 let socket;
 
@@ -24,3 +25,9 @@ function onMessage(fn) {
 
 export { connect, message, onMessage};
 
+message({prefs});
+// onMessage(message => {
+//   if (message.prefs) {
+//     Object.assign(prefs, message.prefs);
+//   }
+// });

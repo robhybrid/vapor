@@ -26,7 +26,7 @@ router.get('/media', walkLocalFiles);
 function walkLocalFiles(req, res) {
   const files   = [];
   const validFilePattern = /\.(m4v|mov|webm|mp4|gif|jpg|png)$/i;
-  const staticServer = 'http://' + getIpAddress() + `:${API_PORT}/media`;
+  const staticServer = 'http://' + ( getIpAddress() || 'localhost' )  + `:${API_PORT}/media`;
 
   // Walker options
   const walker  = walk.walk(mediaRoot, { followLinks: false });
@@ -36,7 +36,9 @@ function walkLocalFiles(req, res) {
 
     // Add this file to the list of files
     if (stat.name.match(validFilePattern)) {
-      files.push(root.replace(mediaRoot, staticServer) + '/' + stat.name);
+      files.push(encodeURI(
+        root.replace(mediaRoot, staticServer) + '/' + stat.name)
+      );
       // generate a thumbnail.
       
       // fs.exists(thubsDir + stat.name + '/tn.png', function(exists){

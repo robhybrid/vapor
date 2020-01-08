@@ -3,6 +3,8 @@ import keycode from 'keycode';
 import appStore from './appStore';
 import _ from 'lodash';
 import { message, onMessage } from './socket';
+import prefs from './utils/prefs';
+import config from './config';
 
 const keysDown = [];
 
@@ -188,15 +190,45 @@ onKeyDown() {
   }
 }, {key: /[\d]/,
   onKeyDown(e, keyName) {
-    appStore.layers.push({
-      keyName,
-      filePath: `/countdown/${keyName === '0' ? '10' : keyName}.mov`
-    })
+    if (config.countdown) {
+      appStore.layers.push({
+        keyName,
+        filePath: `/countdown/${keyName === '0' ? '10' : keyName}.mov`
+      })
+      return;
+    }
+    
+    numberTimers[keyName] = setTimeout(() => {
+      _.defaultsDeep(prefs, {
+        savedGroups: {
+          [keyName]: _.uniq([
+            ..._.get(prefs, `savedGroups['${keyName}']`, []),
+            ...appStore.layers.map(layer => layer.filePath)
+          ])
+        }
+      });
+      numberTimers[keyName] = null;
+    }, 1000);
   },
   onKeyUp(e, keyName) {
-    _.remove(appStore.layers, layer => layer.keyName === keyName);
+    if (config.countdown) {
+      _.remove(appStore.layers, layer => layer.keyName === keyName);
+      return;
+    }
+
+    if (numberTimers[keyName]) {
+      // key press for less that 1 second, Load group.
+      clearTimeout(numberTimers[keyName]);
+      const group = _.get(prefs, `savedGroups['${keyName}']`, []);
+      if (group.length) {
+        appStore.media = group;
+        appStore.patchIndex = 0;
+      }
+    }
   }
 }];
+
+const numberTimers = {};
 
 export { videoKeyChars };
 export default keyControl;

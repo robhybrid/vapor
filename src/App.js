@@ -54,9 +54,13 @@ function _App() {
               layer.filePath.match(/\.(m4v|mov|webm|mp4)$/i) ?
                 <video src={layer.filePath} autoPlay={true} loop={appStore.loopVideo}/> :
                 layer.filePath.match(/\.jpg$/i) ?
-                  <iframe src={`/kaleidos/index.html?n=${appStore.kaleidosSegments}&src=${layer.filePath}&timeout=0&s=${layer.speed}`} title={layer.keyName} /> : 
+                  <iframe src={`/kaleidos/index.html?${new URLSearchParams({
+                    n: appStore.kaleidosSegments,
+                    src: layer.filePath,
+                    s: layer.speed,
+                    timeout: 0
+                  })}`} title={layer.keyName} /> : 
                   null
-
         }</div>)}
         
         {appStore.color ? <div className="color" style={{background: appStore.color}}></div> : null}
@@ -88,6 +92,8 @@ function _App() {
             </select>
 
             <input type="color" onChange={e => appStore.color = e.target.value}/>
+            <div className='blend-mode'>{appStore.blendMode}</div>
+            <div className='blend-mode'>keyboard: {appStore.patchIndex}</div>
           </div> :
           null
         }

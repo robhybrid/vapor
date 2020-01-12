@@ -111,14 +111,16 @@ onKeyDown() {
   onKeyDown() {
     appStore.patchIndex = (appStore.patchIndex - 1);
     if (appStore.patchIndex < 0) {
-      appStore.patchIndex = Math.floor(appStore.media.length / videoKeyChars.length);
+      if (videoKeyChars.length) {
+        appStore.patchIndex = Math.floor(appStore.media.length / videoKeyChars.length);
+      } else {
+        appStore.patchIndex = 0;
+      }
     }
-    console.log('appStore.patchIndex', appStore.patchIndex);
   }
 }, {key: ']',
   onKeyDown() {
     appStore.patchIndex = (appStore.patchIndex + 1) % Math.ceil( appStore.media.length / videoKeyChars.length); 
-    console.log('appStore.patchIndex', appStore.patchIndex);
   }
 }, {key: '\\', // '\'
   onKeyDown() {

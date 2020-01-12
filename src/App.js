@@ -6,6 +6,7 @@ import keyControl from './keyControl';
 import classNames from 'classnames';
 import { connect } from './socket';
 import _ from 'lodash';
+import prefs, { setPref } from './utils/prefs';
 
 function _App() {
 
@@ -85,10 +86,12 @@ function _App() {
               {appStore.display.drawingMask ? 'Release Mask' : 'Draw Mask'}
             </button>
 
-            <select onChange={groupChange}>
+            <select onChange={groupChange} value={appStore.selectedGroup}>
               <option value=''>All</option>
-              {appStore.directories.map(dir => <option 
-                value={dir} selected={appStore.selectedGroup === dir}>{decodeURI(dir)}</option>)}
+              {_.get(appStore, 'directories', []).map(dir => <option 
+                value={dir} >
+                  {decodeURI(dir)}
+                </option>)}
             </select>
 
             <input type="color" onChange={e => appStore.color = e.target.value}/>
@@ -98,13 +101,13 @@ function _App() {
           null
         }
 
-      {appStore.display.maskPoints ? 
+      {appStore.maskPoints ? 
         <svg id="mask">
           <polygon fill="none" 
           stroke={appStore.display.drawingMask ? 
             'white' : 
             null}
-           points={appStore.display.maskPoints
+           points={appStore.maskPoints
             .map(point => `${point.x},${point.y}`)
             .join(' ')}/>
         </svg> 
@@ -139,8 +142,8 @@ function cssFilter(filter) {
 }
 
 function appClick(e) {
-  if (display.maskPoints && display.drawingMask) {
-    display.maskPoints.push({
+  if (appStore.maskPoints && display.drawingMask) {
+    appStore.maskPoints.push({
       x: e.clientX,
       y: e.clientY
     });
@@ -165,29 +168,30 @@ const display = appStore.display;
 function drawMask(e) {
   e.stopPropagation();
   const display = appStore.display;
-  if (display.maskPoints) {
+  if (appStore.maskPoints) {
     display.drawingMask = false;
-    display.maskPoints = null;
+    appStore.maskPoints = null;
   } else {
     display.circle = false;
     display.drawingMask = true;
-    display.maskPoints = [];
+    appStore.maskPoints = [];
     appStore.sliders = false;
   }
 }
 
 function closeMask() {
   display.drawingMask = false;
-  if (display.maskPoints) {
-    display.maskPoints.pop();
+  if (appStore.maskPoints) {
+    appStore.maskPoints.pop();
   }
+  setPref('maskPoints', appStore.maskPoints);
 }
 
 function displayStyle() {
   const style = {};
-  if (display.maskPoints && ! display.drawingMask) {
+  if (appStore.maskPoints && ! display.drawingMask) {
     style.clipPath = `polygon(${
-      display.maskPoints
+      appStore.maskPoints
         .map(p => `${p.x}px ${p.y}px`)
         .join(', ')
     })`;
@@ -197,6 +201,4 @@ function displayStyle() {
 
 function groupChange(e) {
   appStore.selectedGroup = e.target.value;
-  appStore.media = appStore.allMedia
-    .filter(path => path.indexOf(e.target.value) !== -1 );
 }

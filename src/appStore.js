@@ -9,6 +9,7 @@ const appStore = observable({
   transmit: true,
   layers: [],
   keysDown: [],
+  allMedia: [],
   get media() {
     return appStore.allMedia
       .filter(path => path.indexOf(appStore.selectedGroup) !== -1 );
@@ -41,7 +42,6 @@ const appStore = observable({
     .then((res) => res.json())
     .then(media => {
       appStore.allMedia = media;
-      appStore.media = media;
       appStore.directories = _.uniq(
         media.map(path => {
           const matches = path.match(/media\/(.*)\/[^/]+/);
@@ -50,16 +50,36 @@ const appStore = observable({
         .filter(p => p)
       );
     })
-    .catch(err => console.error('filed to fetch media', err));
+    .catch(err => console.error('failed to fetch media', err));
   },
   display: {},
-  selectedGroup: prefs.selectedGroup
+  maskPoints: null,
+  selectedGroup: prefs.selectedGroup || '',
 });
 
 appStore.originalFilter = _.clone(appStore.filter);
 
-observe(appStore, 'selectedGroup', () => {
-  prefs.selectedGroup = appStore.selectedGroup;
-});
+const propsForPrefs = [
+  'blendModeIndex', 
+  'transmit', 
+  'maxLayers', 
+  'maskPoints', 
+  'selectedGroup', 
+  'kaleidosSegments', 
+  'transition'
+];
+
+propsForPrefs.forEach(prop => {
+  if (typeof prefs[prop] !== 'undefined') {
+    appStore[prop] = prefs[prop];
+  }
+  
+  observe(appStore, prop, () => {
+    console.log('storing', prop, appStore[prop]);
+    prefs[prop] = appStore[prop];
+  });
+})
+
+
 
 export default appStore;

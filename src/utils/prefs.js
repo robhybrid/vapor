@@ -14,3 +14,8 @@ export default prefs;
 observe(prefs, (change)=> {
   localStorage.prefs = JSON.stringify(prefs);
 });
+
+export function setPref(key, value) {
+  prefs[key] = value;
+  localStorage.prefs = JSON.stringify(prefs);
+}

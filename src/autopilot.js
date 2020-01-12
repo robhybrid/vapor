@@ -62,7 +62,7 @@ const autopilot = {
     if (appStore.layers.length > appStore.maxLayers) {
       const layersToRemove = appStore.layers.length - appStore.maxLayers;
       appStore.layers.forEach((layer, i) => {
-        if (i <= layersToRemove) {
+        if (i < layersToRemove) {
           fadeOut(layer);
         }
       });

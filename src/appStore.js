@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, observe } from "mobx";
 import config from './config';
 import _ from 'lodash';
 import prefs from './utils/prefs';
@@ -9,7 +9,10 @@ const appStore = observable({
   transmit: true,
   layers: [],
   keysDown: [],
-  media: [],
+  get media() {
+    return appStore.allMedia
+      .filter(path => path.indexOf(appStore.selectedGroup) !== -1 );
+  },
   maxLayers: 2,
   patchIndex: 0,
   transition: {
@@ -49,9 +52,14 @@ const appStore = observable({
     })
     .catch(err => console.error('filed to fetch media', err));
   },
-  display: {}
+  display: {},
+  selectedGroup: prefs.selectedGroup
 });
 
 appStore.originalFilter = _.clone(appStore.filter);
+
+observe(appStore, 'selectedGroup', () => {
+  prefs.selectedGroup = appStore.selectedGroup;
+});
 
 export default appStore;

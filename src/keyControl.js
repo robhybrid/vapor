@@ -164,7 +164,8 @@ onKeyDown() {
       }
 
       if (keysDown.includes('caps lock') || keysDown.includes('shift')) {
-        _.remove(appStore.layers, layer => layer.keyName === keyName);
+        _.filter(appStore.layers, layer => layer.keyName === keyName)
+          .forEach(fadeOut);
       }
       return;
     }
@@ -183,10 +184,7 @@ onKeyDown() {
       return;
     }
     if ( ! layer) return;
-    layer.exit = true;
-    layer.timeout = setTimeout(() => {
-      _.remove(appStore.layers, layer);
-    }, appStore.transition.outMs) 
+    fadeOut(layer);
   }
 }, {key: /[\d]/,
   onKeyDown(e, keyName) {
@@ -227,6 +225,13 @@ onKeyDown() {
     }
   }
 }];
+
+export function fadeOut(layer) {
+  layer.exit = true;
+  layer.timeout = setTimeout(() => {
+    _.remove(appStore.layers, layer);
+  }, appStore.transition.outMs);
+}
 
 const numberTimers = {};
 

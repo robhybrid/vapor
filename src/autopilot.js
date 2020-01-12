@@ -1,5 +1,6 @@
 import appStore from './appStore';
 import _ from 'lodash';
+import { fadeOut } from './keyControl';
 
 let lastTapTime, 
   intervalRate,
@@ -58,8 +59,14 @@ const autopilot = {
     };
     appStore.layers.push(newLayer);
 
-    while(appStore.layers.length > appStore.maxLayers) appStore.layers.shift();
-    
+    if (appStore.layers.length > appStore.maxLayers) {
+      const layersToRemove = appStore.layers.length - appStore.maxLayers;
+      appStore.layers.forEach((layer, i) => {
+        if (i <= layersToRemove) {
+          fadeOut(layer);
+        }
+      });
+    }    
   }
 };
 

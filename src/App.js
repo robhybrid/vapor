@@ -65,8 +65,8 @@ function _App() {
         {appStore.sliders ?
           <div className="sliders" onClick={e => e.stopPropagation()}>
 
-            <Slider label="fade in (ms)" min="1" max="1000" value={appStore.transition.inMs} setter={v => appStore.transition.inMs = v}/>
-            <Slider label="fade out (ms)" min="1" max="1000" value={appStore.transition.outMs} setter={v => appStore.transition.outMs = v}/>
+            <Slider label="fade in (ms)" min="1" max="3000" value={appStore.transition.inMs} setter={v => appStore.transition.inMs = v}/>
+            <Slider label="fade out (ms)" min="1" max="3000" value={appStore.transition.outMs} setter={v => appStore.transition.outMs = v}/>
             <Slider label="Kaleidos Segments" min="2" max="32" step="1" value={appStore.kaleidosSegments} setter={v => appStore.kaleidosSegments = v}/>
             <Slider label="opacity" value={appStore.filter.opacity} setter={v => appStore.filter.opacity = v}/>
             <Slider label="sepia" value={appStore.filter.sepia} setter={v => appStore.filter.sepia = v}/>

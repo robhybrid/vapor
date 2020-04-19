@@ -197,6 +197,24 @@ onKeyDown() {
       })
       return;
     }
+
+
+    if (appStore.lastVideo) {
+      const lastVideoLayer = appStore.layers.find(l => l.filePath = appStore.lastVideo);
+      if (lastVideoLayer) {
+        if (keyName === '0') {
+          _.remove(appStore.layers, l => l === lastVideoLayer);
+        } else {
+          const newTime = lastVideoLayer.ref.duration / keyName;
+          if (newTime) lastVideoLayer.ref.currentTime = newTime;
+        }
+      } else {
+        appStore.layers.push({
+          keyName,
+          filePath: appStore.lastVideo
+        })
+      }
+    }
     
     numberTimers[keyName] = setTimeout(() => {
       _.defaultsDeep(prefs, {
@@ -216,6 +234,7 @@ onKeyDown() {
       return;
     }
 
+    return;
     if (numberTimers[keyName]) {
       // key press for less that 1 second, Load group.
       clearTimeout(numberTimers[keyName]);

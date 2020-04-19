@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { connect } from './socket';
 import _ from 'lodash';
 import prefs, { setPref } from './utils/prefs';
+import config from './config';
 
 function _App() {
 
@@ -53,7 +54,12 @@ function _App() {
             layer.filePath.match(/\.gif$/i) ?
               <img className="gif" src={layer.filePath} alt=""/> :
               layer.filePath.match(/\.(m4v|mov|webm|mp4)$/i) ?
-                <video src={layer.filePath} autoPlay={true} loop={appStore.loopVideo}/> :
+                <video src={layer.filePath} 
+                  autoPlay={true} 
+                  loop={appStore.loopVideo} 
+                  muted 
+                  onDurationChange={e => appStore.lastVideo = layer.filePath}
+                  ref={el => layer.ref = el}/> :
                 layer.filePath.match(/\.jpg$/i) ?
                   <iframe src={`/kaleidos/index.html?${new URLSearchParams({
                     n: appStore.kaleidosSegments,
@@ -63,6 +69,7 @@ function _App() {
                   })}`} title={layer.keyName} /> : 
                   null
         }</div>)}
+          
         
         {appStore.color ? <div className="color" style={{background: appStore.color}}></div> : null}
 
@@ -149,7 +156,7 @@ function appClick(e) {
     });
   }
 
-
+  if (config.fullScreen)
   document.documentElement.requestFullscreen()
       .catch(e => console.error(e));
 }

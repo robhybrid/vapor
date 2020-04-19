@@ -144,11 +144,10 @@ onKeyDown() {
 }, {key: 'space',
   onKeyDown() {
     // blackout
-    while (appStore.layers.length) {
-      appStore.layers.pop();
-    }
-    appStore.layers.length = 0;
-    appStore.layers = [];
+    const prevTransition = _.clone(appStore.transition);
+    appStore.transition.outMs = 3 * 1000;
+    setTimeout(() =>  appStore.transition = prevTransition, appStore.transition.outMs);
+    appStore.layers.forEach(fadeOut);
     autopilot.clearBmp();
   }
 }, {key: 'alt',

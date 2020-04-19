@@ -47,7 +47,7 @@ const autopilot = {
     appStore.bpm = '';
     clearInterval(intervalId);
     
-    appStore.layers = [];
+    // appStore.layers = [];
   },
   playNext: function() {
     // if (lastKey) {

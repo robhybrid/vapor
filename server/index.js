@@ -25,7 +25,7 @@ app.use('/media', express.static(mediaRoot));
 router.get('/media', walkLocalFiles);
 function walkLocalFiles(req, res) {
   const files   = [];
-  const validFilePattern = /\.(m4v|mov|webm|mp4|gif|jpg|png)$/i;
+  const validFilePattern = /^[^.].*\.(m4v|mov|webm|mp4|gif|jpg|png)$/i;
   const staticServer = 'http://' + ( getIpAddress() || 'localhost' )  + `:${API_PORT}/media`;
 
   // Walker options

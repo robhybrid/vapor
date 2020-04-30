@@ -12,8 +12,13 @@ const appStore = observable({
   keysDown: [],
   allMedia: [],
   get media() {
+    if (appStore._media) return appStore._media;
     return appStore.allMedia
       .filter(path => path.indexOf(appStore.selectedGroup) !== -1 );
+  },
+  set media(media) {
+    // used for patches saved in prefs
+    appStore._media = media;
   },
   maxLayers: 2,
   patchIndex: 0,

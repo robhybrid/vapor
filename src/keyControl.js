@@ -144,11 +144,15 @@ onKeyDown() {
 }, {key: 'space',
   onKeyDown() {
     // blackout
-    const prevTransition = _.clone(appStore.transition);
+    appStore.prevTransition = _.clone(appStore.transition);
     appStore.transition.outMs = 3 * 1000;
-    setTimeout(() =>  appStore.transition = prevTransition, appStore.transition.outMs);
+    appStore.fadeOutTimeout = setTimeout(() =>  appStore.transition = appStore.prevTransition, appStore.transition.outMs);
     appStore.layers.forEach(fadeOut);
     autopilot.clearBmp();
+  },
+  onKeyUp() {
+    appStore.transition = appStore.prevTransition;
+    clearTimeout(appStore.fadeOutTimeout);
   }
 }, {key: 'alt',
   onKeyDown() {
@@ -187,8 +191,29 @@ onKeyDown() {
     if ( ! layer) return;
     fadeOut(layer);
   }
-}, {key: /[\d]/,
+}, { key: /[\d]/, // number keys
   onKeyDown(e, keyName) {
+
+    // Saves clips to a number key
+    if (e.ctrlKey) {
+      if (e.shift) {
+        // TODO: load patch
+      }
+      numberTimers[keyName] = setTimeout(() => {
+        _.defaultsDeep(prefs, {
+          savedGroups: {
+            [keyName]: _.uniq([
+              ..._.get(prefs, `savedGroups['${keyName}']`, []),
+              ...appStore.layers.map(layer => layer.filePath)
+            ])
+          }
+        });
+        numberTimers[keyName] = null;
+      }, 1000);
+      return;
+    }
+
+    // countdown (for new years)
     if (config.countdown) {
       appStore.layers.push({
         keyName,
@@ -196,7 +221,6 @@ onKeyDown() {
       })
       return;
     }
-
 
     if (appStore.lastVideo) {
       const lastVideoLayer = appStore.layers.find(l => l.filePath = appStore.lastVideo);
@@ -214,26 +238,12 @@ onKeyDown() {
         })
       }
     }
-    
-    numberTimers[keyName] = setTimeout(() => {
-      _.defaultsDeep(prefs, {
-        savedGroups: {
-          [keyName]: _.uniq([
-            ..._.get(prefs, `savedGroups['${keyName}']`, []),
-            ...appStore.layers.map(layer => layer.filePath)
-          ])
-        }
-      });
-      numberTimers[keyName] = null;
-    }, 1000);
   },
   onKeyUp(e, keyName) {
     if (config.countdown) {
       _.remove(appStore.layers, layer => layer.keyName === keyName);
       return;
     }
-
-    return;
     if (numberTimers[keyName]) {
       // key press for less that 1 second, Load group.
       clearTimeout(numberTimers[keyName]);
@@ -241,6 +251,19 @@ onKeyDown() {
       if (group.length) {
         appStore.media = group;
         appStore.patchIndex = 0;
+      }
+    }
+  }
+}, {
+  key: 'backspace', // Delete
+  onKeyDown(e) {
+    if (e.ctrlKey) { // release loaded group, restores full set of clips.
+      appStore.media = null;
+      // Delete the group if the number is also held. 
+      const number = keysDown.find(key => key.match(/\d/));
+      if (number) {
+        prefs.savedGroups[number] = undefined;
+        console.log('group', number, 'deleted');
       }
     }
   }

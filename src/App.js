@@ -8,6 +8,7 @@ import { connect } from './socket';
 import _ from 'lodash';
 import prefs, { setPref } from './utils/prefs';
 import config from './config';
+import { message, onMessage } from './socket';
 
 function _App() {
 
@@ -74,7 +75,7 @@ function _App() {
         {appStore.color ? <div className="color" style={{background: appStore.color}}></div> : null}
 
         </div>
-        {appStore.sliders ?
+        {appStore.controls ?
           <div className="sliders" onClick={e => e.stopPropagation()}>
 
             <Slider label="fade in (ms)" min="1" max="3000" value={appStore.transition.inMs} setter={v => appStore.transition.inMs = v}/>
@@ -162,12 +163,20 @@ function appClick(e) {
 }
 
 function Slider({value, setter, min=0, max=1, step=0.01, label=''}) {
+  const sliderChange = (e) => {
+    message({
+      eventType: 'sliderChange',
+      label,
+      value
+    });
+    setter(+e.target.value);
+  };
   return (
-  <div className="slider">
-    <label>{label} {value}
-      <input type="range" min={min} max={max} step={step} onChange={e => setter(+e.target.value)} value={value} />
-    </label>
-  </div>);
+    <div className="slider">
+      <label>{label} {value}
+        <input type="range" min={min} max={max} step={step} onChange={sliderChange} value={value} />
+      </label>
+    </div>);
 }
 
 const display = appStore.display;
@@ -182,7 +191,7 @@ function drawMask(e) {
     display.circle = false;
     display.drawingMask = true;
     appStore.maskPoints = [];
-    appStore.sliders = false;
+    appStore.controls = false;
   }
 }
 

@@ -28,12 +28,15 @@ onMessage((data) => {
 function keyDownListener(e) {
   const keyName = keycode(e);
   if (keysDown.includes(keyName)) return;
-  message({
-    keyName,
-    eventType: 'keyDown'
-  });
 
-  console.log('keyName', keyName);
+  if (keyName !== 'alt') {
+    message({
+      keyName,
+      eventType: 'keyDown'
+    });
+  }
+  
+  // console.log('keyName', keyName);
   pushKey(e, keyName);
 }
 
@@ -156,7 +159,7 @@ onKeyDown() {
   }
 }, {key: 'alt',
   onKeyDown() {
-    appStore.sliders = ! appStore.sliders;
+    appStore.controls = ! appStore.controls;
   }
 }, {
   key: RegExp(`^[${videoKeyChars.join('')}]$`),

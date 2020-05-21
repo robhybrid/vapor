@@ -4,6 +4,7 @@ import _ from 'lodash';
 import prefs from './utils/prefs';
 
 const appStore = observable({
+  controls: false,
   lastVideo: null,
   loopVideo: true,
   prefs,
@@ -37,9 +38,16 @@ const appStore = observable({
   },
   kaleidosSegments: 6,
   get blendModes() {
-    return ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
+    return [
+      "screen",
+      // "normal",
+      "difference",
+      "exclusion",
+      "hard-light",
+      "lighten", "color-dodge",
+      "multiply", "overlay", "darken", "color-burn", "soft-light",  "hue", "saturation", "color", "luminosity"];
   },
-  blendModeIndex: 2,
+  blendModeIndex: 0,
   get blendMode() {
     return this.blendModes[this.blendModeIndex];
   },

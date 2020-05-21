@@ -9,6 +9,9 @@ const appStore = observable({
   loopVideo: true,
   prefs,
   transmit: true,
+  receive: true,
+  play: true,
+  hideCursor: false,
   layers: [],
   keysDown: [],
   allMedia: [],
@@ -44,8 +47,10 @@ const appStore = observable({
       "difference",
       "exclusion",
       "hard-light",
-      "lighten", "color-dodge",
-      "multiply", "overlay", "darken", "color-burn", "soft-light",  "hue", "saturation", "color", "luminosity"];
+      "lighten", 
+      // "color-dodge",
+      // "multiply", "overlay", "darken", "color-burn", "soft-light",  "hue", "saturation", "color", "luminosity"
+    ];
   },
   blendModeIndex: 0,
   get blendMode() {
@@ -92,8 +97,6 @@ propsForPrefs.forEach(prop => {
     console.log('storing', prop, appStore[prop]);
     prefs[prop] = appStore[prop];
   });
-})
-
-
+});
 
 export default appStore;

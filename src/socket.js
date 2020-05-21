@@ -10,11 +10,14 @@ const messageHandlerQue = [];
 function connect() {
   socket = socketIOClient(config.apiRoot);
   socket.on('message', data => {
-    messageHandlerQue.forEach(fn => fn(data));
+    console.log('on message', data);
+    if (appStore.receive)
+      messageHandlerQue.forEach(fn => fn(data));
   });
 }
 
 function message(message) {
+  console.log('message', message)
   if ( ! appStore.transmit) return;
   socket && socket.emit('message', message);
 }

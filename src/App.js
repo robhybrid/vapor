@@ -20,7 +20,11 @@ function _App() {
   
 
   return (
-    <div className="App" onClick={appClick}    onDoubleClick={closeMask}>
+    <div className="App" onClick={appClick} onDoubleClick={closeMask}
+      style={{
+        cursor: appStore.hideCursor ? 'none' : 'auto'
+      }}
+    >
       <style>{`
         .media-object {
           filter: ${cssFilter(appStore.filter)};
@@ -37,7 +41,8 @@ function _App() {
      
         style={displayStyle()}
       >
-      {_.uniqBy(appStore.layers, 'filePath')
+
+      {appStore.play ? _.uniqBy(appStore.layers, 'filePath')
         .filter(layer => layer.filePath)
         .map(layer => {
           if (layer.filePath.match(/\.jpg$/i) && ! layer.speed) {
@@ -71,16 +76,17 @@ function _App() {
                     timeout: 0
                   })}`} title={layer.keyName} /> : 
                   null
-        }</div>)}
-          
+        }</div>) :
+        null
+      }    
         
-        {appStore.color ? <div className="color" style={{background: appStore.color}}></div> : null}
+      {appStore.color ? <div className="color" style={{background: appStore.color}}></div> : null}
 
-        </div>
-        {appStore.controls ?
-          <Controls/>:
-          null
-        }
+      </div>
+      {appStore.controls ?
+        <Controls/>:
+        null
+      }
 
       {appStore.maskPoints ? 
         <svg id="mask">

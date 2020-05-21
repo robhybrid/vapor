@@ -1,0 +1,42 @@
+.controls {
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 1;
+  color: #fff;
+  cursor: auto;
+  padding: 2em;
+  .toggles {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .misc {
+    div {
+      padding: 1em;
+    }
+  }
+}
+
+.sliders {
+  display: flex;
+  flex-wrap: wrap;
+  label {
+    display: block;
+    transform: rotate(-90deg) translate(-30vh, 0);
+    width: 30vh;
+    transform-origin: 0 0;
+    input {
+      width: 100%;
+    }
+  }
+  .slider {
+    width: 4em;
+    height: 32vh;
+  }
+  button {
+    height: 2em;
+  }
+}

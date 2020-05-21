@@ -58,33 +58,6 @@ body, html {
   transition: opacity 300ms ease-in;
 }
 
-.sliders {
-  display: flex;
-  top: 50%;
-  position: absolute;
-  z-index: 1;
-  color: #fff;
-  flex-wrap: wrap;
-  label {
-    background: rgba(0,0,0,0.5);
-    display: block;
-    transform: rotate(-90deg);
-    width: 30vh;
-    transform-origin: 0 0;
-    input {
-      width: 100%;
-    }
-
-  }
-  .slider {
-    width: 4em;
-    height: 32vh;
-  }
-  button {
-    height: 2em;
-  }
-}
-
 .color {
   height: 100vh;
   width: 100vw;

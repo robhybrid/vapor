@@ -196,7 +196,7 @@ onKeyDown() {
   }
 }, { key: /[\d]/, // number keys
   onKeyDown(e, keyName) {
-
+    if ( ! e) return;
     // Saves clips to a number key
     if (e.ctrlKey) {
       if (e.shift) {

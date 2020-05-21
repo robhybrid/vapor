@@ -8,7 +8,7 @@ import { connect } from './socket';
 import _ from 'lodash';
 import prefs, { setPref } from './utils/prefs';
 import config from './config';
-import { message, onMessage } from './socket';
+import Controls from './Controls';
 
 function _App() {
 
@@ -16,6 +16,8 @@ function _App() {
     appStore.fetchMedia();
     connect();
   }, []);
+
+  
 
   return (
     <div className="App" onClick={appClick}    onDoubleClick={closeMask}>
@@ -76,36 +78,7 @@ function _App() {
 
         </div>
         {appStore.controls ?
-          <div className="sliders" onClick={e => e.stopPropagation()}>
-
-            <Slider label="fade in (ms)" min="1" max="3000" value={appStore.transition.inMs} setter={v => appStore.transition.inMs = v}/>
-            <Slider label="fade out (ms)" min="1" max="3000" value={appStore.transition.outMs} setter={v => appStore.transition.outMs = v}/>
-            <Slider label="Kaleidos Segments" min="2" max="32" step="1" value={appStore.kaleidosSegments} setter={v => appStore.kaleidosSegments = v}/>
-            <Slider label="opacity" value={appStore.filter.opacity} setter={v => appStore.filter.opacity = v}/>
-            <Slider label="sepia" value={appStore.filter.sepia} setter={v => appStore.filter.sepia = v}/>
-            <Slider label="blur" max="100" value={appStore.filter.blur} setter={v => appStore.filter.blur = v}/>
-            <Slider label="brightness" max="3" value={appStore.filter.brightness} setter={v => appStore.filter.brightness = v}/>
-            <Slider label="contrast" max="3" value={appStore.filter.contrast} setter={v => appStore.filter.contrast = v}/>
-            <Slider label="saturate" max="3" value={appStore.filter.saturate} setter={v => appStore.filter.saturate = v}/>
-            <Slider label="hue-rotate" max="360" value={appStore.filter['hue-rotate']} setter={v => appStore.filter['hue-rotate'] = v}/>
-            <button onClick={()=>appStore.filter = _.clone(appStore.originalFilter) }>reset</button>
-            <button onClick={() => appStore.display.circle = ! appStore.display.circle }>circle</button>
-            <button onClick={drawMask}>
-              {appStore.display.drawingMask ? 'Release Mask' : 'Draw Mask'}
-            </button>
-
-            <select onChange={groupChange} value={appStore.selectedGroup}>
-              <option value=''>All</option>
-              {_.get(appStore, 'directories', []).map(dir => <option 
-                value={dir} >
-                  {decodeURI(dir)}
-                </option>)}
-            </select>
-
-            <input type="color" onChange={e => appStore.color = e.target.value}/>
-            <div className='blend-mode'>{appStore.blendMode}</div>
-            <div className='blend-mode'>keyboard: {appStore.patchIndex}</div>
-          </div> :
+          <Controls/>:
           null
         }
 
@@ -162,38 +135,8 @@ function appClick(e) {
       .catch(e => console.error(e));
 }
 
-function Slider({value, setter, min=0, max=1, step=0.01, label=''}) {
-  const sliderChange = (e) => {
-    message({
-      eventType: 'sliderChange',
-      label,
-      value
-    });
-    setter(+e.target.value);
-  };
-  return (
-    <div className="slider">
-      <label>{label} {value}
-        <input type="range" min={min} max={max} step={step} onChange={sliderChange} value={value} />
-      </label>
-    </div>);
-}
 
 const display = appStore.display;
-
-function drawMask(e) {
-  e.stopPropagation();
-  const display = appStore.display;
-  if (appStore.maskPoints) {
-    display.drawingMask = false;
-    appStore.maskPoints = null;
-  } else {
-    display.circle = false;
-    display.drawingMask = true;
-    appStore.maskPoints = [];
-    appStore.controls = false;
-  }
-}
 
 function closeMask() {
   display.drawingMask = false;
@@ -213,8 +156,4 @@ function displayStyle() {
     })`;
   }
   return style;
-}
-
-function groupChange(e) {
-  appStore.selectedGroup = e.target.value;
 }

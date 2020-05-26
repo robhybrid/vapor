@@ -3,19 +3,19 @@
 ## install
     npm i
 
-create a `.env` file and set in it:
-
-    MEDIA_ROOT=/path/to/where_all_your_clips_lives
-
-This should be an absolute path. Supported formats are:
-M$V, MOV, WEBM, MP4, GIF, JPG
-You can also set this variable at runtime on the command line.
-
 ### config options
     {
         countdown: false, // makes numbers play numbers (for new years countdown)
         apiRoot // the location of the API server.
     }
+### add clips
+This accepts the folling formats (m4v|mov|webm|mp4|gif|jpg|png) 
+
+Either put them all in a directoy named `media` at the root of this folder, or create a `.env` file and in that file add the path to you media folder as:
+    
+    MEDIA_ROOT=/path/to/my/folder
+
+Vapor will search for any appropirate files anywhere in that directory. 
 
 ## start
     npm start

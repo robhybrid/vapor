@@ -19,7 +19,7 @@ app.use(cors());
 const router = express.Router();
 
 const mediaRoot = process.env.MEDIA_ROOT || './media';
-
+app.use(express.static('./build'));
 app.use('/media', express.static(mediaRoot));
 
 router.get('/media', walkLocalFiles);

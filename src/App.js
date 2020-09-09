@@ -17,8 +17,6 @@ function _App() {
     connect();
   }, []);
 
-  
-
   return (
     <div className="App" onClick={appClick} onDoubleClick={closeMask}
       style={{

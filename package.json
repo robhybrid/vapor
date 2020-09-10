@@ -30,7 +30,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start": "concurrently \"nodemon server\" \"react-scripts start\""
+    "start": "concurrently \"nodemon server\" \"react-scripts start\"",
+    "server": "node server",
+    "docker": "docker run -p 49161:3001 -d robhybrid/vapor",
+    "docker-build": "docker build -t robhybrid/vapor ."
   },
   "eslintConfig": {
     "extends": "react-app"

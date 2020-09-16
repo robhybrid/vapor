@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.20.0",
     "body-parser": "1.19.0",
     "classnames": "2.2.6",
     "concurrently": "5.0.1",
@@ -23,7 +24,8 @@
     "react-scripts": "3.3.0",
     "socket.io": "2.3.0",
     "socket.io-client": "2.3.0",
-    "walk": "2.3.14"
+    "walk": "2.3.14",
+    "xml2js": "^0.4.23"
   },
   "scripts": {
     "start-client": "react-scripts start",

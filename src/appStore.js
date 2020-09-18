@@ -74,6 +74,7 @@ const appStore = observable({
   display: {},
   maskPoints: null,
   selectedGroup: prefs.selectedGroup || '',
+  showHelp: true
 });
 
 appStore.originalFilter = _.clone(appStore.filter);

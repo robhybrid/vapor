@@ -15,6 +15,8 @@
     "express": "4.17.1",
     "fullscreen-polyfill": "1.0.2",
     "keycode": "2.2.0",
+    "markdown": "^0.5.0",
+    "marked": "^1.1.1",
     "mobx": "5.15.1",
     "mobx-react": "6.1.4",
     "node-sass": "4.13.1",
@@ -28,9 +30,9 @@
     "xml2js": "^0.4.23"
   },
   "scripts": {
-    "start-client": "react-scripts start",
+    "start-client": "react-scripts start --no-cache",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --no-cache",
     "eject": "react-scripts eject",
     "start": "concurrently \"nodemon server\" \"react-scripts start\"",
     "server": "node server",

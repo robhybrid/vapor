@@ -2,7 +2,8 @@ import { observable, observe } from 'mobx';
 
 let _prefs = {};
 try {
-  _prefs = JSON.parse(localStorage.prefs);
+  if (localStorage.prefs)
+    _prefs = JSON.parse(localStorage.prefs);
 } catch(e) {
   console.error('Could not load prefs', e);
 }

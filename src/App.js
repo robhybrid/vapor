@@ -10,6 +10,8 @@ import prefs, { setPref } from './utils/prefs';
 import config from './config';
 import Controls from './Controls';
 
+import Help from './Help';
+
 function _App() {
 
   useEffect(() => {
@@ -23,6 +25,7 @@ function _App() {
         cursor: appStore.hideCursor ? 'none' : 'auto'
       }}
     >
+      {appStore.showHelp ? <Help/> : null}
       <style>{`
         .media-object {
           filter: ${cssFilter(appStore.filter)};

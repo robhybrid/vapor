@@ -42,6 +42,9 @@ export default observer(function Controls() {
       <input type="color" onChange={e => appStore.color = e.target.value}/>
       <div className='blend-mode'>{appStore.blendMode}</div>
       <div className='blend-mode'>keyboard: {appStore.patchIndex}</div>
+
+      <button onClick={e => appStore.showHelp = true}>help</button>
+
     </div>
 
   </div> );

@@ -53,7 +53,7 @@ function walkLocalFiles() {
 
   // Walker options
   const walker  = walk.walk(mediaRoot, { followLinks: false });
-  return newPromise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     walker.on('file', function(root, stat, next) {
       // Add this file to the list of files
       if (stat.name.match(validFilePattern)) {
@@ -81,6 +81,4 @@ function walkLocalFiles() {
 }
 
 app.use('/api', router);
-
-// app.listen(API_PORT, () => console.log(`SERVER LISTENING ON PORT ${API_PORT}`));
-server.listen(API_PORT, () => console.log(`SERVER LISTENING ON PORT ${API_PORT} with websockets`));
+server.listen(API_PORT, () => console.log(`SERVER LISTENING ON PORT ${API_PORT} with web sockets`));

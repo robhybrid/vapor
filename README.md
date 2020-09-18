@@ -1,5 +1,7 @@
 # Vapor 2
 
+demo: https://vjapp.io
+
 ## install
     npm i
 
@@ -17,13 +19,15 @@ Either put them all in a directory named `media` at the root of this folder, or 
 
 Vapor will search for any appropriate files anywhere in that directory. 
 
-Alternatively, you can assign a S3 bucket, and it will read all the files from the index.
+Alternatively, you can assign a S3 bucket, and it will read all the files from the index. All the media files in an S3 bucket must be in a `video` subdirectory.
+
+    S3_WEB_ROOT=https://dk1ug69h7ixee.cloudfront.net/
 
 ## start
     npm start
 
 ## controls {#controls}
-Controls are listed on the help screen.
+Controls are also listed on the help screen, [src/Help/controls.md](src/Help/controls.md).You can access them, in app, by pressing `option` and then clicking "help".
 
 ### organizing clips
 Clips can be organized into directories, and those directories are selectable form the option menu.

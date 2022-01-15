@@ -16,7 +16,7 @@
     "fullscreen-polyfill": "1.0.2",
     "keycode": "2.2.0",
     "markdown": "^0.5.0",
-    "marked": "^1.1.1",
+    "marked": "^4.0.10",
     "mobx": "5.15.1",
     "mobx-react": "6.1.4",
     "node-sass": "4.13.1",

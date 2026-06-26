@@ -1,7 +1,8 @@
 
 - `A-Z` any of the letter keys, as well as `;` `"`  `<` `>` `?` - plays clips.
 - `tab` tap to beat for autopilot.
-- `option` displays additional controls (including this help screen).
+- `tap screen` (mobile) also triggers autopilot tap-to-beat.
+- `option`/`alt` displays additional controls (including this help screen).
 - `spacebar` blackout and stops autopilot. Long hold to fade out.
 - `[` & `]` brackets cycle through keyboards / clips
 - `\` resets you to the first set of clips.

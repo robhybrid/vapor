@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: vapor-vj
+    runtime: node
+    plan: free
+    autoDeploy: true
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: S3_WEB_ROOT
+        value: https://dk1ug69h7ixee.cloudfront.net/

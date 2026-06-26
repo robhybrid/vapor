@@ -7,7 +7,6 @@ import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { Server } from 'socket.io';
-import getIpAddress from './getIpAddress.js';
 import * as s3 from './s3.js';
 
 loadEnv({ path: '.env.local' });
@@ -56,14 +55,15 @@ router.get('/media', async (_req, res) => {
 function walkLocalFiles() {
   const files = [];
   const validFilePattern = /^[^.].*\.(m4v|mov|webm|mp4|gif|jpg|png)$/i;
-  const staticServer = `http://${getIpAddress() || 'localhost'}:${API_PORT}/media`;
   const walker = walk.walk(mediaRoot, { followLinks: false });
 
   return new Promise((resolve, reject) => {
     walker.on('file', (root, stat, next) => {
       if (stat.name.match(validFilePattern)) {
+        const relativeRoot = path.relative(mediaRoot, root);
+        const relativePath = path.join(relativeRoot, stat.name).replace(/\\/g, '/');
         files.push(
-          encodeURI(root.replace(mediaRoot, staticServer) + '/' + stat.name)
+          encodeURI(`/media/${relativePath}`)
         );
       }
       next();

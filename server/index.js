@@ -76,7 +76,7 @@ function walkLocalFiles() {
 app.use('/api', router);
 
 if (process.env.NODE_ENV === 'production') {
-  app.get('*', (_req, res) => {
+  app.use((_req, res) => {
     res.sendFile(path.join(rootDir, 'dist', 'index.html'));
   });
 }

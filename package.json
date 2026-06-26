@@ -1,58 +1,36 @@
 {
   "name": "vapor2",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "axios": "^0.20.0",
-    "body-parser": "1.19.0",
-    "classnames": "2.2.6",
-    "concurrently": "5.0.1",
-    "cors": "2.8.5",
-    "dotenv": "8.2.0",
-    "express": "4.17.1",
-    "fullscreen-polyfill": "1.0.2",
-    "keycode": "2.2.0",
-    "markdown": "^0.5.0",
-    "marked": "^1.1.1",
-    "mobx": "5.15.1",
-    "mobx-react": "6.1.4",
-    "node-sass": "4.13.1",
-    "nodemon": "^2.0.4",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "3.3.0",
-    "socket.io": "2.3.0",
-    "socket.io-client": "2.3.0",
-    "walk": "2.3.14",
-    "xml2js": "^0.4.23"
-  },
+  "type": "module",
   "scripts": {
-    "start-client": "react-scripts start --no-cache",
-    "build": "react-scripts build",
-    "test": "react-scripts test --no-cache",
-    "eject": "react-scripts eject",
-    "start": "concurrently \"nodemon server\" \"react-scripts start\"",
-    "server": "node server",
-    "docker": "docker run -p 49161:3001 -d robhybrid/vapor",
+    "dev": "concurrently -n server,client -c blue,green \"nodemon server/index.js\" \"vite\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "NODE_ENV=production node server/index.js",
+    "server": "node server/index.js",
     "docker-build": "docker build -t robhybrid/vapor ."
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "dependencies": {
+    "axios": "^1.7.9",
+    "classnames": "^2.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "keycode": "^2.2.1",
+    "marked": "^18.0.5",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "walk": "^2.3.15",
+    "xml2js": "^0.6.2",
+    "zustand": "^5.0.3"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "proxy": "http://localhost:3001"
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.3",
+    "concurrently": "^10.0.3",
+    "nodemon": "^3.1.9",
+    "vite": "^8.1.0"
+  }
 }

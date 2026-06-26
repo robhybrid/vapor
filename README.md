@@ -1,43 +1,45 @@
 # Vapor 2
 
-demo: https://vjapp.io
+Live visual media player for VJ performance. Press letter keys to trigger clips, tap to beat for autopilot, and sync across multiple screens via WebSockets.
 
-## install
-    npm i
+Demo: https://vjapp.io
 
-### config options
-    {
-        countdown: false, // makes numbers play numbers (for new years countdown)
-        apiRoot // the location of the API server.
-    }
-### add clips
-This accepts these formats: `(m4v|mov|webm|mp4|gif|jpg|png)`
+## Quick start
 
-Either put them all in a directory named `media` at the root of this folder, or create a `.env` file and in that file add the path to you media folder as:
-    
-    MEDIA_ROOT=/path/to/my/folder
+```bash
+npm install
+npm run dev
+```
 
-Vapor will search for any appropriate files anywhere in that directory. 
+Open [http://localhost:3000](http://localhost:3000). The API server runs on port 3001.
 
-Alternatively, you can assign a S3 bucket, and it will read all the files from the index. All the media files in an S3 bucket must be in a `video` subdirectory.
+## Media
 
-    S3_WEB_ROOT=https://dk1ug69h7ixee.cloudfront.net/
+Supported formats: `m4v`, `mov`, `webm`, `mp4`, `gif`, `jpg`, `png`
 
-## start
-    npm start
+Place clips in a `media/` folder at the project root, or set a custom path:
 
-## controls {#controls}
-Controls are also listed on the help screen, [src/Help/controls.md](src/Help/controls.md).You can access them, in app, by pressing `option` and then clicking "help".
+```bash
+MEDIA_ROOT=/path/to/my/folder
+```
 
-### organizing clips
-Clips can be organized into directories, and those directories are selectable form the option menu.
+For S3/CloudFront, set `S3_WEB_ROOT` to your bucket index URL. Files must live under a `video/` prefix.
 
-<!-- #### groups
-The groups (accessed by CTRL + Number) are a way of defining groups of clips on the fly.
-Any clips that you have playing can be saved to one of 10 groups by pressing CTRL + Number.
-Pressing CTRL + Shift +  Number will load that group.
-Once selected, only these clips will be available, either by keyboard or autopilot. 
+## Production
 
-CTRL + Delete releases the saved group and restores all your clips. 
+```bash
+npm run build
+npm start
+```
 
-CTRL + Number + Delete - Deletes that group. -->
+Serves the built React app and API from port 3001.
+
+## Controls
+
+Press `option` (Alt) to open the control panel and help. Full keyboard shortcuts are listed in the in-app help screen.
+
+## Stack
+
+- React 18 + Vite
+- Zustand for state
+- Express + Socket.IO for media API and multi-client sync

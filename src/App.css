@@ -1,0 +1,81 @@
+body,
+html {
+  overflow: hidden;
+}
+
+.App {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.display {
+  flex: 1 1 auto;
+  position: relative;
+}
+
+.display.circle {
+  clip-path: circle(50vh);
+}
+
+.media-object {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.media-object.enter {
+  animation: fadeIn 1s forwards;
+}
+
+.media-object.exit {
+  animation: fadeOut 1s forwards;
+}
+
+.media-object img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.kaleidoscope {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#mask {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.color {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  mix-blend-mode: color;
+}
+
+video {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
